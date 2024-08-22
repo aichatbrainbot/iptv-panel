@@ -117,6 +117,12 @@ export default function LoginForm({ logged }: Props) {
           </form>
         </Form>
       </div>
+      <Link
+        href={`/register`}
+        className="text-center text-lg underline underline-offset-2"
+      >
+        Don't have an account ? click to register
+      </Link>
     </div>
   );
 }
