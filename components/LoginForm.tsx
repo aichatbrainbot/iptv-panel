@@ -57,28 +57,6 @@ export default function LoginForm({ logged }: Props) {
     },
   });
 
-  // add oauth for your supabase project to acess this
-  const signInWithAuth = async (provider: "google" | "facebook") => {
-    let whatENV;
-    const env = process.env.NODE_ENV;
-    if (env === "development") {
-      whatENV = "http://localhost:3000";
-    } else if (env === "production") {
-      whatENV = process.env.NEXT_PUBLIC_URL!;
-    }
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${whatENV}/auth/callback`,
-      },
-    });
-    if (error) {
-      console.error("Error", error);
-      return;
-    } else {
-    }
-  };
-
   return (
     <div className="mx-auto max-w-sm space-y-6">
       <div className="space-y-2 text-center">
@@ -138,36 +116,6 @@ export default function LoginForm({ logged }: Props) {
             </Button>
           </form>
         </Form>
-        <div className="grid gap-4">
-          <Link
-            href={`/register`}
-            className="text-center text-lg underline underline-offset-2"
-          >
-            Don't have an account ? click to register
-          </Link>
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => {
-                signInWithAuth("google");
-              }}
-            >
-              <ChromeIcon className="mr-2 h-4 w-4" />
-              Google
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => {
-                toast.warning("Facebook login is not available yet");
-              }}
-            >
-              <FacebookIcon className="mr-2 h-4 w-4" />
-              Facebook
-            </Button>
-          </div>
-        </div>
       </div>
     </div>
   );

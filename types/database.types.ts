@@ -9,59 +9,76 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      products: {
+      devices: {
         Row: {
-          description: string | null
-          name: string
-          price: number
-          product_id: number
+          device_type: string | null
+          id: string
+          mac_address: string | null
+          subscription_id: string | null
         }
         Insert: {
-          description?: string | null
-          name: string
-          price: number
-          product_id?: number
+          device_type?: string | null
+          id: string
+          mac_address?: string | null
+          subscription_id?: string | null
         }
         Update: {
-          description?: string | null
-          name?: string
-          price?: number
-          product_id?: number
-        }
-        Relationships: []
-      }
-      ratings: {
-        Row: {
-          comment: string | null
-          created_at: string | null
-          product_id: number | null
-          rating: number
-          rating_id: number
-          user_id: number
-        }
-        Insert: {
-          comment?: string | null
-          created_at?: string | null
-          product_id?: number | null
-          rating: number
-          rating_id?: number
-          user_id: number
-        }
-        Update: {
-          comment?: string | null
-          created_at?: string | null
-          product_id?: number | null
-          rating?: number
-          rating_id?: number
-          user_id?: number
+          device_type?: string | null
+          id?: string
+          mac_address?: string | null
+          subscription_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "ratings_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: "devices_subscription_id_fkey"
+            columns: ["subscription_id"]
             isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["product_id"]
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          country_code: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          order_id: string | null
+          plan: Database["public"]["Enums"]["subscription_plan"]
+          price: number
+          user_id: string
+        }
+        Insert: {
+          country_code?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          order_id?: string | null
+          plan: Database["public"]["Enums"]["subscription_plan"]
+          price: number
+          user_id: string
+        }
+        Update: {
+          country_code?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          order_id?: string | null
+          plan?: Database["public"]["Enums"]["subscription_plan"]
+          price?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -70,10 +87,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      most_selling_plan: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      most_selling_plans: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          plan_name: string
+          count: number
+        }[]
+      }
+      total_sales_overall: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      total_sales_today: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
     }
     Enums: {
-      [_ in never]: never
+      subscription_plan: "monthly" | "quarterly" | "semi-annual" | "annual"
     }
     CompositeTypes: {
       [_ in never]: never

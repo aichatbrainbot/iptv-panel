@@ -1,32 +1,40 @@
+import RecentOrdersCard from "@/components/home/RecentOrdersCard";
+import StatCards from "@/components/home/StatCards";
+import TopSellingProductsCard from "@/components/home/TopSellingProductsCard";
 import PageWrapper from "@/components/PageWrapper";
-import PaginatedProducts from "@/components/PaginatedProducts";
-import { Github, Linkedin } from "lucide-react";
-import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 
-export default function Home() {
+export default async function Home() {
   return (
     <PageWrapper className="gap-4 pt-20">
-      <h1 className="text-4xl">Hello Guys :)</h1>
-      <h2 className="text-xl">
-        My name is Ayoub Bensalah and I'm a software engineer
-      </h2>
-      <h3 className="text-xl">I hope you find this helpful</h3>
-
-      <div className="flex flex-col items-center text-center">
-        <h3>Follow me on :</h3>
-        <div className="flex items-center gap-4">
-          <Link href={`https://github.com/ayoubben18`} target="_blank">
-            <Github size={32} />
-          </Link>
-          <Link
-            target="_blank"
-            href={`https://www.linkedin.com/in/ayoub-bensalah-56834b29b/`}
+      <div className="flex min-h-screen w-full flex-col">
+        <main className="flex-1 space-y-6 p-4 md:p-6">
+          <Suspense
+            fallback={
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {[...Array(4)].map((_, i) => (
+                  <Skeleton key={i} className="h-[136px] w-full rounded-lg" />
+                ))}
+              </div>
+            }
           >
-            <Linkedin size={32} />
-          </Link>
-        </div>
+            <StatCards />
+          </Suspense>
+          <div className="grid gap-6 md:grid-cols-2">
+            <Suspense
+              fallback={<Skeleton className="h-[300px] w-full rounded-lg" />}
+            >
+              <RecentOrdersCard />
+            </Suspense>
+            <Suspense
+              fallback={<Skeleton className="h-[300px] w-full rounded-lg" />}
+            >
+              <TopSellingProductsCard />
+            </Suspense>
+          </div>
+        </main>
       </div>
-      <PaginatedProducts />
     </PageWrapper>
   );
 }
