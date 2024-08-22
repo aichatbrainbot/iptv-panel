@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  getAllUsers,
+  getAllUsersAsAdmin,
   isAdmin as verifyRole,
   setAdmin,
 } from "@/db/data/users-data";
@@ -62,7 +62,7 @@ const UserAdminManagement = () => {
     isError,
   } = useQuery({
     queryKey: ["users", page],
-    queryFn: () => getAllUsers(page, itemsPerPage),
+    queryFn: () => getAllUsersAsAdmin(page, itemsPerPage),
   });
 
   const mutation = useMutation({

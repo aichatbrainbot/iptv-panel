@@ -17,25 +17,35 @@ import { getAllUsers } from "@/db/data/users-data";
 import UserPurchasesDialog from "./UserPurchasesDialog";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SearchFilter } from "@/types/search.types";
+import { useDebounce } from "use-debounce";
 
 const UsersTable = () => {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const itemsPerPage = 10;
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [filter] = useQueryState("filter", {
+    defaultValue: SearchFilter.USER_EMAIL,
+  });
 
+  const [search] = useQueryState("search", {
+    defaultValue: "",
+  });
+  const [debouncedSearch] = useDebounce(search, 500);
   const {
     data: users,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["users", page],
-    queryFn: () => getAllUsers(page, itemsPerPage),
+    queryKey: ["users", page, filter, debouncedSearch],
+    queryFn: () =>
+      getAllUsers(page, itemsPerPage, filter as SearchFilter, debouncedSearch),
   });
 
   if (isError) toast.error("Error fetching users");
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="w-full py-10">
       <h1 className="mb-5 text-2xl font-bold">User Management</h1>
       <Table>
         <TableHeader>
@@ -63,11 +73,11 @@ const UsersTable = () => {
             : users &&
               users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.user_id}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <Button
-                      onClick={() => setSelectedUserId(user.id)}
+                      onClick={() => setSelectedUserId(user.user_id)}
                       variant="outline"
                     >
                       View Purchases

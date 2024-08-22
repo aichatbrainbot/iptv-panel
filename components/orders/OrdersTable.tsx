@@ -12,24 +12,58 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getRecentOrders } from "@/db/data/subscriptions-data";
+import { SearchFilter } from "@/types/search.types";
 import { Subscriptions } from "@/types/tables.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useEffect } from "react";
-import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
+import { useDebounce } from "use-debounce";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Skeleton } from "../ui/skeleton";
 
 const OrdersTable = () => {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const itemsPerPage = 10;
+  const [filter] = useQueryState("filter", {
+    defaultValue: SearchFilter.ORDER_ID,
+  });
+  const [tab] = useQueryState("tab", {
+    defaultValue: "completed",
+  });
+
+  const [search] = useQueryState("search");
+  const [debouncedSearch] = useDebounce(search, 500);
+  const [itemsPerPage, setItemsPerPage] = useQueryState(
+    "itemsPerPage",
+    parseAsInteger.withDefault(10),
+  );
   const queryClient = useQueryClient();
 
   const { data: orders, isLoading } = useQuery({
-    queryKey: [`subscriptions?page=${page}`, page],
-    queryFn: () => getRecentOrders(page, itemsPerPage),
+    queryKey: [
+      `subscriptions?page=${page}`,
+      page,
+      itemsPerPage,
+      filter,
+      debouncedSearch,
+      tab,
+    ],
+    queryFn: () =>
+      getRecentOrders(
+        page,
+        itemsPerPage,
+        tab,
+        filter as SearchFilter,
+        debouncedSearch,
+      ),
     refetchOnMount: true,
-    // staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   useEffect(() => {
@@ -57,7 +91,7 @@ const OrdersTable = () => {
   }, [queryClient, page]);
 
   return (
-    <div className="flex w-full flex-col items-center gap-4">
+    <div className="flex w-full flex-col items-center gap-4 pb-10">
       <Table className="w-full">
         <TableHeader>
           <TableRow>
@@ -112,6 +146,22 @@ const OrdersTable = () => {
           <ArrowLeftIcon className="h-4 w-4" />
           Previous
         </Button>
+        <Select
+          value={itemsPerPage.toString()}
+          onValueChange={(value) => setItemsPerPage(parseInt(value))}
+        >
+          <SelectTrigger className="w-[100px]">
+            <SelectValue placeholder="Items per page" />
+          </SelectTrigger>
+          <SelectContent>
+            {[10, 20, 30, 40, 50].map((value) => (
+              <SelectItem key={value} value={value.toString()}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Button
           disabled={!orders || orders.length < itemsPerPage}
           onClick={() => setPage((prev) => prev + 1)}

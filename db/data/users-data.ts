@@ -1,8 +1,11 @@
 "use server";
 
 import { supabase } from "@/clients/supabaseCLient";
+import { handleStatus } from "@/lib/handleStatus";
 import redis from "@/lib/redis";
 import supabaseAdmin from "@/lib/supabase-admin";
+import { SearchFilter } from "@/types/search.types";
+import { UserData } from "@/types/tables.types";
 import { TypedSupabaseClient } from "@/types/TypedSupabaseClient";
 import { createClient } from "@/utils/supabase/server";
 import { Session, User } from "@supabase/supabase-js";
@@ -33,7 +36,40 @@ const signOut = async () => {
   redirect("/login");
 };
 
-const getAllUsers = async (page: number, perPage: number) => {
+const getAllUsers = async (
+  page: number,
+  perPage: number,
+  filter?: SearchFilter,
+  search?: string,
+) => {
+  const start = (page - 1) * perPage;
+  const end = page * perPage - 1;
+  let query = supabase
+    .from("user_data")
+    .select("*")
+    .range(start, end)
+    .order("created_at", { ascending: true });
+
+  if (filter && search?.length && search?.length > 3) {
+    switch (filter) {
+      case SearchFilter.USER_ID:
+        query = query.ilike("user_id", `%${search}%`);
+        break;
+      case SearchFilter.USER_EMAIL:
+        query = query.ilike("email", `%${search}%`);
+        break;
+      case SearchFilter.USER_PHONE:
+        query = query.ilike("user_phone", `%${search}%`);
+        break;
+    }
+  }
+
+  const { data, error, status } = await query;
+
+  return handleStatus(status, data, error) as UserData[];
+};
+
+const getAllUsersAsAdmin = async (page: number, perPage: number) => {
   const {
     data: { users },
     error,
@@ -53,4 +89,12 @@ const isAdmin = async (email: string) => {
   return (await redis.sismember("allowed-emails", email)) === 1;
 };
 
-export { getUser, getUserSession, signOut, getAllUsers, setAdmin, isAdmin };
+export {
+  getAllUsers,
+  getUser,
+  getUserSession,
+  isAdmin,
+  setAdmin,
+  signOut,
+  getAllUsersAsAdmin,
+};

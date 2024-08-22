@@ -4,12 +4,14 @@ import { DollarSign, BarChart, Users, Package } from "lucide-react";
 import {
   getTotalSalesOverall,
   getTotalSalesToday,
+  getUsersCount,
 } from "@/db/aggregations/sales-aggregation";
 
 const StatCards = async () => {
-  const [totalSalesToday, totalSalesOverall] = await Promise.all([
+  const [totalSalesToday, totalSalesOverall, usersCount] = await Promise.all([
     getTotalSalesToday(),
     getTotalSalesOverall(),
+    getUsersCount(),
   ]);
 
   return (
@@ -28,7 +30,7 @@ const StatCards = async () => {
       />
       <StatCard
         title="Active Customers"
-        value="1,234"
+        value={`${usersCount || 0}`}
         description="+7% from last month"
         icon={Users}
       />

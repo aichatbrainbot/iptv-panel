@@ -18,7 +18,7 @@ export type Database = {
         }
         Insert: {
           device_type?: string | null
-          id: string
+          id?: string
           mac_address?: string | null
           subscription_id?: string | null
         }
@@ -48,6 +48,7 @@ export type Database = {
           order_id: string | null
           plan: Database["public"]["Enums"]["subscription_plan"]
           price: number
+          status: string | null
           user_id: string
         }
         Insert: {
@@ -59,6 +60,7 @@ export type Database = {
           order_id?: string | null
           plan: Database["public"]["Enums"]["subscription_plan"]
           price: number
+          status?: string | null
           user_id: string
         }
         Update: {
@@ -70,6 +72,7 @@ export type Database = {
           order_id?: string | null
           plan?: Database["public"]["Enums"]["subscription_plan"]
           price?: number
+          status?: string | null
           user_id?: string
         }
         Relationships: [
@@ -81,6 +84,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_data: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: never
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: never
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
@@ -103,6 +127,10 @@ export type Database = {
         Returns: number
       }
       total_sales_today: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      total_users: {
         Args: Record<PropertyKey, never>
         Returns: number
       }

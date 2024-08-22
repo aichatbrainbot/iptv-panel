@@ -2,6 +2,8 @@
 
 import { supabase } from "@/clients/supabaseCLient";
 import { handleStatus } from "@/lib/handleStatus";
+import logger from "@/lib/logger";
+import supabaseAdmin from "@/lib/supabase-admin";
 
 const getTotalSalesToday = async () => {
   const { data, error, status } = await supabase.rpc("total_sales_today");
@@ -21,4 +23,18 @@ const getMostSellingPlans = async () => {
   }[];
 };
 
-export { getTotalSalesToday, getTotalSalesOverall, getMostSellingPlans };
+const getUsersCount = async () => {
+  const { data, error } = await supabaseAdmin.auth.admin.listUsers();
+  if (error) {
+    logger.error(error);
+    return 0;
+  }
+  return data?.users.length;
+};
+
+export {
+  getTotalSalesToday,
+  getTotalSalesOverall,
+  getMostSellingPlans,
+  getUsersCount,
+};

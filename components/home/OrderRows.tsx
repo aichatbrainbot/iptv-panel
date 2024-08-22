@@ -74,7 +74,7 @@ export const OrderRow = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className="cursor-pointer">
         <TableRow key={index}>
           {" "}
           <TableCell>{index + 1}</TableCell>{" "}

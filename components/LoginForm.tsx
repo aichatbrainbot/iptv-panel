@@ -1,11 +1,16 @@
 "use client";
+import { login } from "@/app/(authenticate)/login/action";
+import useErrorHandler from "@/hooks/useErrorHandler";
+import { loginSchema } from "@/types/zod-schemas/auth-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChromeIcon, FacebookIcon } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import FormError from "./FormError";
+import { Button } from "./ui/button";
 import {
   Form,
   FormControl,
@@ -15,14 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { toast } from "sonner";
-import { login } from "@/app/(authenticate)/login/action";
-import { loginSchema } from "@/types/zod-schemas/auth-schemas";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import useErrorHandler from "@/hooks/useErrorHandler";
-import { supabase } from "@/clients/supabaseCLient";
-import { useMutation } from "@tanstack/react-query";
 
 interface Props {
   logged: boolean;

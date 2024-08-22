@@ -21,8 +21,6 @@ export async function signup({
     },
   });
 
-  // map the user to another table to add name and other stuff that you need
-
   if (error) {
     throw new Error(error.message);
   }
