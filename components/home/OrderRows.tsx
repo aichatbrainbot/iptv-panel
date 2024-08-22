@@ -49,7 +49,7 @@ const OrderRows = ({ initialOrders }: Props) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, orders, setOrders]);
+  }, [orders, setOrders]);
   return orders.map((order, index) => (
     <OrderRow order={order} index={index} key={order.id} />
   ));

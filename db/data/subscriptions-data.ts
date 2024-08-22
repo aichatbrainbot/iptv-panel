@@ -15,4 +15,13 @@ const getRecentOrders = async (page: number = 1, limit: number = 5) => {
   return handleStatus(status, data, error) as Subscriptions[];
 };
 
-export { getRecentOrders };
+const getUserSubscriptions = async (userId: string) => {
+  const { data, error, status } = await supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("user_id", userId);
+
+  return handleStatus(status, data, error) as Subscriptions[];
+};
+
+export { getRecentOrders, getUserSubscriptions };

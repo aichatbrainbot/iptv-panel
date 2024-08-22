@@ -26,9 +26,10 @@ const OrdersTable = () => {
   const queryClient = useQueryClient();
 
   const { data: orders, isLoading } = useQuery({
-    queryKey: ["subscriptions", page],
+    queryKey: [`subscriptions?page=${page}`, page],
     queryFn: () => getRecentOrders(page, itemsPerPage),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnMount: true,
+    // staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const OrdersTable = () => {
         (payload) => {
           toast.info(`New order: ${payload.new.id}`);
           queryClient.setQueryData(
-            ["subscriptions", page],
+            [`subscriptions?page=${1}`, page],
             (oldData: Subscriptions[] | undefined) => {
               if (!oldData) return [payload.new as Subscriptions];
               return [payload.new as Subscriptions, ...oldData.slice(0, 9)];

@@ -81,7 +81,7 @@ export default function Component({ children }: { children: React.ReactNode }) {
     children,
     href,
   }: {
-    children: string;
+    children: React.ReactNode;
     href: string;
   }) => (
     <div
@@ -121,7 +121,7 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.orderManagement && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem href="/orders" children="View Orders" />
+                  <SubNavItem href="/orders">View Orders</SubNavItem>
                 </div>
               )}
 
@@ -134,14 +134,12 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.userManagement && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem
-                    href="/users/add"
-                    children="Add/Edit/Delete Users"
-                  />
-                  <SubNavItem
-                    href="/users/permissions"
-                    children="Set User Permissions"
-                  />
+                  <SubNavItem href="/users/add">
+                    Add/Edit/Delete Users
+                  </SubNavItem>
+                  <SubNavItem href="/users/permissions">
+                    Set User Permissions
+                  </SubNavItem>
                 </div>
               )}
 
@@ -154,14 +152,12 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.productManagement && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem
-                    href="/products/add"
-                    children="Add and Edit Packages"
-                  />
-                  <SubNavItem
-                    href="/products/content"
-                    children="Content Management"
-                  />
+                  <SubNavItem href="/products/add">
+                    Add and Edit Packages
+                  </SubNavItem>
+                  <SubNavItem href="/products/content">
+                    Content Management
+                  </SubNavItem>
                 </div>
               )}
 
@@ -174,12 +170,11 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.paymentInvoicing && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem
-                    href="/payment-methods"
-                    children="Set Up Payment Methods"
-                  />
-                  <SubNavItem href="/" children="Track Payments" />
-                  <SubNavItem href="/" children="Issue Invoices" />
+                  <SubNavItem href="/payment-methods">
+                    Set Up Payment Methods
+                  </SubNavItem>
+                  <SubNavItem href="/">Track Payments</SubNavItem>
+                  <SubNavItem href="/">Issue Invoices</SubNavItem>
                 </div>
               )}
 
@@ -192,9 +187,9 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.reportsAnalytics && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem href="/" children="Sales Report" />
-                  <SubNavItem href="/" children="Order Report" />
-                  <SubNavItem href="/" children="User Statistics" />
+                  <SubNavItem href="/">Sales Report</SubNavItem>
+                  <SubNavItem href="/">Order Report</SubNavItem>
+                  <SubNavItem href="/">User Statistics</SubNavItem>
                 </div>
               )}
 
@@ -207,8 +202,8 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.generalSettings && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem href="/" children="Change Basic Settings" />
-                  <SubNavItem href="/" children="Manage Notifications" />
+                  <SubNavItem href="/">Change Basic Settings</SubNavItem>
+                  <SubNavItem href="/">Manage Notifications</SubNavItem>
                 </div>
               )}
 
@@ -221,14 +216,12 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.support && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem
-                    href="/support/ticket-management"
-                    children="Ticket Management"
-                  />
-                  <SubNavItem
-                    href="/support/customer-communication"
-                    children="Customer Communication"
-                  />
+                  <SubNavItem href="/support/ticket-management">
+                    Ticket Management
+                  </SubNavItem>
+                  <SubNavItem href="/support/customer-communication">
+                    Customer Communication
+                  </SubNavItem>
                 </div>
               )}
 
@@ -241,8 +234,8 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.uiSettings && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem href="/" children="Customize User Interface" />
-                  <SubNavItem href="/" children="Menu Settings" />
+                  <SubNavItem href="/">Customize User Interface</SubNavItem>
+                  <SubNavItem href="/">Menu Settings</SubNavItem>
                 </div>
               )}
             </nav>
