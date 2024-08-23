@@ -11,4 +11,12 @@ const deleteOffer = async (offerId: string) => {
   await redis.del(`offer:${offerId}`);
 };
 
-export { updateOffer, deleteOffer };
+const getOffers = async () => {
+  const offers = (await Promise.all(
+    (await redis.keys("offer:*")).map((key) => redis.get(key)),
+  )) as Offer[];
+
+  return offers || [];
+};
+
+export { updateOffer, deleteOffer, getOffers };
