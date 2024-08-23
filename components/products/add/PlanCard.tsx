@@ -40,7 +40,7 @@ const PlanCard = ({ offer }: Props) => {
     defaultValues: offer,
   });
 
-  const { mutate: update } = useMutation({
+  const { mutate: update, isPending } = useMutation({
     mutationFn: (updatedOffer: Offer) => updateOffer(updatedOffer),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["offers"] });
@@ -223,7 +223,11 @@ const PlanCard = ({ offer }: Props) => {
                 </Button>
               </div>
             </div>
-            <Button type="submit" className="mt-4 w-full">
+            <Button
+              type="submit"
+              className="mt-4 w-full"
+              disabled={isPending || form.formState.isSubmitting}
+            >
               Save Changes
             </Button>
           </CardContent>
