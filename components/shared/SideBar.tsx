@@ -7,6 +7,7 @@ import {
   BarChart,
   ChevronDown,
   ChevronRight,
+  ChevronLeft,
   CreditCard,
   LayoutDashboard,
   LifeBuoy,
@@ -16,14 +17,26 @@ import {
   Settings,
   ShoppingCart,
   Users,
+  Menu,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { signOut } from "@/db/data/users-data";
 import { toast } from "sonner";
 
+type OpenSections = {
+  orderManagement: boolean;
+  userManagement: boolean;
+  productManagement: boolean;
+  paymentInvoicing: boolean;
+  reportsAnalytics: boolean;
+  generalSettings: boolean;
+  support: boolean;
+  uiSettings: boolean;
+};
+
 export default function Component({ children }: { children: React.ReactNode }) {
-  const [openSections, setOpenSections] = useState({
+  const [openSections, setOpenSections] = useState<OpenSections>({
     orderManagement: false,
     userManagement: false,
     productManagement: false,
@@ -48,7 +61,7 @@ export default function Component({ children }: { children: React.ReactNode }) {
     mutationFn: signOut,
   });
 
-  const toggleSection = (section: keyof typeof openSections) => {
+  const toggleSection = (section: keyof OpenSections) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
@@ -59,9 +72,7 @@ export default function Component({ children }: { children: React.ReactNode }) {
     isOpen?: boolean;
   }> = ({ icon: Icon, children, onClick, isOpen }) => (
     <div
-      className={`flex cursor-pointer items-center justify-between rounded-md px-3 py-2 hover:bg-muted ${
-        isSidebarOpen ? "" : "hidden"
-      }`}
+      className="flex cursor-pointer items-center justify-between rounded-md px-3 py-2 hover:bg-muted"
       onClick={onClick}
     >
       <div className="flex items-center gap-3">
@@ -84,23 +95,19 @@ export default function Component({ children }: { children: React.ReactNode }) {
     children: React.ReactNode;
     href: string;
   }) => (
-    <div
-      className={`cursor-pointer rounded-md px-10 py-1 text-sm hover:bg-muted ${
-        isSidebarOpen ? "" : "hidden"
-      }`}
-    >
+    <div className="cursor-pointer rounded-md px-10 py-1 text-sm hover:bg-muted">
       <Link href={href}>{children}</Link>
     </div>
   );
 
   return (
-    <div className="flex">
+    <div className="flex h-screen overflow-hidden">
       <div
-        className={`transition-all duration-300 ease-in-out ${
+        className={`fixed left-0 top-0 z-40 h-full transition-all duration-300 ease-in-out ${
           isSidebarOpen ? "w-64" : "w-0"
         } overflow-hidden`}
       >
-        <div className="flex h-screen w-64 flex-col border-r bg-background">
+        <div className="flex h-full w-64 flex-col border-r bg-background">
           <div className="border-b p-4">
             <Link href="/">
               <h1 className="text-lg font-semibold">E-commerce Admin</h1>
@@ -173,8 +180,8 @@ export default function Component({ children }: { children: React.ReactNode }) {
                   <SubNavItem href="/payment-methods">
                     Set Up Payment Methods
                   </SubNavItem>
-                  <SubNavItem href="/">Track Payments</SubNavItem>
-                  <SubNavItem href="/">Issue Invoices</SubNavItem>
+                  <SubNavItem href="/track-payments">Track Payments</SubNavItem>
+                  <SubNavItem href="/issue-invoices">Issue Invoices</SubNavItem>
                 </div>
               )}
 
@@ -187,9 +194,9 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.reportsAnalytics && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem href="/">Sales Report</SubNavItem>
-                  <SubNavItem href="/">Order Report</SubNavItem>
-                  <SubNavItem href="/">User Statistics</SubNavItem>
+                  <SubNavItem href="/reports/sales">Sales Report</SubNavItem>
+                  <SubNavItem href="/reports/orders">Order Report</SubNavItem>
+                  <SubNavItem href="/reports/users">User Statistics</SubNavItem>
                 </div>
               )}
 
@@ -202,8 +209,12 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.generalSettings && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem href="/">Change Basic Settings</SubNavItem>
-                  <SubNavItem href="/">Manage Notifications</SubNavItem>
+                  <SubNavItem href="/settings/basic">
+                    Change Basic Settings
+                  </SubNavItem>
+                  <SubNavItem href="/settings/notifications">
+                    Manage Notifications
+                  </SubNavItem>
                 </div>
               )}
 
@@ -234,8 +245,12 @@ export default function Component({ children }: { children: React.ReactNode }) {
               </NavItem>
               {openSections.uiSettings && (
                 <div className="ml-4 space-y-1">
-                  <SubNavItem href="/">Customize User Interface</SubNavItem>
-                  <SubNavItem href="/">Menu Settings</SubNavItem>
+                  <SubNavItem href="/ui/customize">
+                    Customize User Interface
+                  </SubNavItem>
+                  <SubNavItem href="/ui/menu-settings">
+                    Menu Settings
+                  </SubNavItem>
                 </div>
               )}
             </nav>
@@ -254,14 +269,25 @@ export default function Component({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </div>
-      <div className="flex-1">
-        <Button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="m-4 p-2"
-        >
-          {isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
-        </Button>
-        {children}
+      <div
+        className={`flex flex-1 flex-col ${isSidebarOpen ? "ml-64" : "ml-0"} transition-all duration-300`}
+      >
+        <div className="sticky top-0 z-30 flex items-center bg-background p-4 shadow-sm">
+          <Button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            variant="outline"
+            size="icon"
+            className="mr-4"
+          >
+            {isSidebarOpen ? (
+              <ChevronLeft className="h-4 w-4" />
+            ) : (
+              <Menu className="h-4 w-4" />
+            )}
+          </Button>
+          <h2 className="text-lg font-semibold">Dashboard</h2>
+        </div>
+        <div className="flex-1 overflow-auto p-4">{children}</div>
       </div>
     </div>
   );
