@@ -49,6 +49,7 @@ const updateBlog = async (id: string, content: string) => {
     .from("blogs")
     .update({ content: JSON.parse(content) })
     .eq("id", id);
+  revalidatePath(`/products/content-management/${id}`);
   revalidatePath("/products/content-management");
   return handleStatus(status, data, error);
 };

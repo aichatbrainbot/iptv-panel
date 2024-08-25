@@ -37,6 +37,7 @@ const BlogWrapper = ({ id, content }: BlogWrapperProps) => {
       {content && (
         <EditorRoot>
           <EditorContent
+            immediatelyRender={false}
             initialContent={content}
             className="relative min-h-[500px] w-full max-w-screen-lg bg-background sm:mb-3 sm:rounded-lg"
             extensions={extensions}
