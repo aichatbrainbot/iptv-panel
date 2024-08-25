@@ -47,7 +47,7 @@ export default function Component({ children }: { children: React.ReactNode }) {
     uiSettings: false,
   });
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSignOut = () => {
     toast.promise(mutateAsync(), {
@@ -162,7 +162,7 @@ export default function Component({ children }: { children: React.ReactNode }) {
                   <SubNavItem href="/products/add">
                     Add and Edit Packages
                   </SubNavItem>
-                  <SubNavItem href="/products/content">
+                  <SubNavItem href="/products/content-management">
                     Content Management
                   </SubNavItem>
                 </div>

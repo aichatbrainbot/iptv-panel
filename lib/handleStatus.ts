@@ -22,7 +22,7 @@ export const handleStatus = <T>(
       return data as T[];
     }
     return data as T;
-  } else if (status === 404) {
+  } else if (status === 404 || status === 406) {
     return null;
   } else {
     logger.error({ error }, "Database error");

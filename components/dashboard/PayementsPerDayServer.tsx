@@ -1,16 +1,17 @@
-"use client";
-import { useQuery } from "@tanstack/react-query";
-import PayementPerDayChart from "./PayementPerDayChart";
 import { getPayementsPerDay } from "@/db/aggregations/sales-aggregation";
-import { useQueryState, parseAsInteger } from "nuqs";
+import PayementsPerDayMid from "./PayementsPerDayMid";
+import { unstable_noStore as noStore } from "next/cache";
+import { Suspense } from "react";
 
 const PayementsPerDayServer = async () => {
-  const [days, _] = useQueryState("days", parseAsInteger.withDefault(30));
-  const { data } = useQuery({
-    queryKey: ["payements-per-day", days],
-    queryFn: () => getPayementsPerDay(days || 30),
-  });
-  return <PayementPerDayChart data={data || []} />;
+  noStore();
+  const data = await getPayementsPerDay(7);
+
+  return (
+    <Suspense>
+      <PayementsPerDayMid initialData={data} />
+    </Suspense>
+  );
 };
 
 export default PayementsPerDayServer;

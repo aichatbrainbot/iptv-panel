@@ -38,9 +38,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const PayementPerDayChart = ({ data }: Props) => {
-  const [days, setDays] = useQueryState("days", parseAsInteger.withDefault(30));
+  const [days, setDays] = useQueryState("days", parseAsInteger.withDefault(7));
+
   const medianPayement =
     data.reduce((acc, curr) => acc + curr.total_payments, 0) / data.length;
+
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between">

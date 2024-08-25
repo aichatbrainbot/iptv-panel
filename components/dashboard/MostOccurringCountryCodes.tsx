@@ -28,7 +28,6 @@ const MostOccurringCountryCodes = ({ data }: Props) => {
     customers: item.occurrences,
     fill: `var(--color-${item.country_code.toLowerCase()})`,
   }));
-  console.log(chartData);
 
   const chartConfig = {
     customers: {

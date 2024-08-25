@@ -44,6 +44,7 @@ const getPayementsPerDay = async (days: number) => {
       num_days: days,
     },
   );
+
   return handleStatus(status, data, error) as PaymentsPerDay[];
 };
 

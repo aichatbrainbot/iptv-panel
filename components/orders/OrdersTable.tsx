@@ -85,8 +85,6 @@ const OrdersTable = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "subscriptions" },
         (payload) => {
-          console.log(payload);
-
           queryClient.setQueryData(
             [
               `subscriptions?page=${1}`,

@@ -9,6 +9,24 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blogs: {
+        Row: {
+          content: Json | null
+          created_at: string
+          id: number
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       devices: {
         Row: {
           device_type: string

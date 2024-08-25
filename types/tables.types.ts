@@ -3,6 +3,7 @@ import { Tables } from "./database.types";
 export type Subscriptions = Tables<"subscriptions">;
 export type Devices = Tables<"devices">;
 export type UserData = Tables<"user_data">;
+export type Blogs = Tables<"blogs">;
 
 export type PaymentsPerDay = {
   payment_date: string;
