@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
-import { updateOffer } from "@/db/data/redis-data";
+import { updateOffer, deleteOffer } from "@/db/data/redis-data";
 import { Offer } from "@/types/plans.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash2, PlusCircle } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,28 +31,46 @@ const offerSchema = z.object({
 
 type Props = {
   offer: Offer;
+  isNewOffer?: boolean;
 };
 
-const PlanCard = ({ offer }: Props) => {
+const PlanCard = ({ offer, isNewOffer = false }: Props) => {
   const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof offerSchema>>({
     resolver: zodResolver(offerSchema),
     defaultValues: offer,
   });
 
-  const { mutate: update, isPending } = useMutation({
+  const { mutateAsync: update, isPending } = useMutation({
     mutationFn: (updatedOffer: Offer) => updateOffer(updatedOffer),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["offers"] });
-      toast.success("Offer updated successfully");
-    },
-    onError: (error) => {
-      toast.error(error.message);
     },
   });
 
-  const onSubmit = (data: z.infer<typeof offerSchema>) => {
-    update(data);
+  const { mutateAsync: deleteOff, isPending: isDeleting } = useMutation({
+    mutationFn: (offerId: string) => deleteOffer(offerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["offers"] });
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof offerSchema>) => {
+    toast.promise(update(data), {
+      loading: isNewOffer ? "Creating offer..." : "Updating offer...",
+      success: isNewOffer
+        ? "Offer created successfully"
+        : "Offer updated successfully",
+      error: isNewOffer ? "Failed to create offer" : "Failed to update offer",
+    });
+  };
+
+  const onDelete = async () => {
+    toast.promise(deleteOff(offer.id), {
+      loading: "Deleting offer...",
+      success: "Offer deleted successfully",
+      error: "Failed to delete offer",
+    });
   };
 
   return (
@@ -114,9 +132,9 @@ const PlanCard = ({ offer }: Props) => {
                                   id={`price-${plan.id}`}
                                   type="number"
                                   {...field}
-                                  onChange={(e) =>
-                                    field.onChange(parseFloat(e.target.value))
-                                  }
+                                  onChange={(e) => {
+                                    field.onChange(e.target.value);
+                                  }}
                                   className="w-24"
                                 />
                               </FormControl>
@@ -164,6 +182,7 @@ const PlanCard = ({ offer }: Props) => {
                             )}
                           />
                           <Button
+                            type="button"
                             variant="outline"
                             size="icon"
                             onClick={() => {
@@ -180,6 +199,7 @@ const PlanCard = ({ offer }: Props) => {
                         </div>
                       ))}
                       <Button
+                        type="button"
                         variant="outline"
                         onClick={() => {
                           const newPlans = [...form.getValues("plans")];
@@ -196,6 +216,7 @@ const PlanCard = ({ offer }: Props) => {
               ))}
               <div className="flex justify-between">
                 <Button
+                  type="button"
                   onClick={() => {
                     const newPlans = [...form.getValues("plans")];
                     newPlans.push({
@@ -211,6 +232,7 @@ const PlanCard = ({ offer }: Props) => {
                   <PlusCircle className="mr-2 h-4 w-4" /> Add Plan
                 </Button>
                 <Button
+                  type="button"
                   variant="destructive"
                   onClick={() => {
                     const newPlans = [...form.getValues("plans")];
@@ -223,12 +245,18 @@ const PlanCard = ({ offer }: Props) => {
                 </Button>
               </div>
             </div>
+
+            <Button type="submit" className="mt-4 w-full" disabled={isPending}>
+              {isNewOffer ? "Create Offer" : "Save Changes"}
+            </Button>
             <Button
-              type="submit"
+              type="button"
+              variant="outline"
               className="mt-4 w-full"
-              disabled={isPending || form.formState.isSubmitting}
+              onClick={onDelete}
+              disabled={isDeleting}
             >
-              Save Changes
+              Delete Offer <Trash2 className="ml-2 h-4 w-4" />
             </Button>
           </CardContent>
         </Card>

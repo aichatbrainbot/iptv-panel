@@ -1,6 +1,5 @@
 "use client";
 
-import { supabase } from "@/clients/supabaseCLient";
 import { OrderRow } from "@/components/home/OrderRows";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getRecentOrders } from "@/db/data/subscriptions-data";
-import { SearchFilter } from "@/types/search.types";
+import { OrderStatus, SearchFilter } from "@/types/search.types";
 import { Subscriptions } from "@/types/tables.types";
+import { createClient } from "@/utils/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
@@ -30,12 +30,25 @@ import {
 import { Skeleton } from "../ui/skeleton";
 
 const OrdersTable = () => {
+  const supabase = createClient();
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [filter] = useQueryState("filter", {
+  const [filter] = useQueryState<SearchFilter>("filter", {
     defaultValue: SearchFilter.ORDER_ID,
+    parse: (value) => {
+      if (Object.values(SearchFilter).includes(value as SearchFilter)) {
+        return value as SearchFilter;
+      }
+      return SearchFilter.ORDER_ID;
+    },
   });
-  const [tab] = useQueryState("tab", {
-    defaultValue: "completed",
+  const [tab] = useQueryState<OrderStatus>("tab", {
+    defaultValue: OrderStatus.COMPLETED,
+    parse: (value) => {
+      if (Object.values(OrderStatus).includes(value as OrderStatus)) {
+        return value as OrderStatus;
+      }
+      return OrderStatus.COMPLETED;
+    },
   });
 
   const [search] = useQueryState("search");
@@ -63,7 +76,6 @@ const OrdersTable = () => {
         filter as SearchFilter,
         debouncedSearch,
       ),
-    refetchOnMount: true,
   });
 
   useEffect(() => {
@@ -73,12 +85,49 @@ const OrdersTable = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "subscriptions" },
         (payload) => {
-          toast.info(`New order: ${payload.new.id}`);
+          console.log(payload);
+
           queryClient.setQueryData(
-            [`subscriptions?page=${1}`, page],
+            [
+              `subscriptions?page=${1}`,
+              page,
+              itemsPerPage,
+              filter,
+              debouncedSearch,
+              tab,
+            ],
             (oldData: Subscriptions[] | undefined) => {
               if (!oldData) return [payload.new as Subscriptions];
-              return [payload.new as Subscriptions, ...oldData.slice(0, 9)];
+              return [
+                payload.new as Subscriptions,
+                ...oldData.slice(0, itemsPerPage - 1),
+              ];
+            },
+          );
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "subscriptions" },
+        (payload) => {
+          if (payload.new.status === OrderStatus.PAID) {
+            toast.info(`New order: ${payload.new.id}`);
+          }
+          queryClient.setQueryData(
+            [
+              `subscriptions?page=${1}`,
+              page,
+              itemsPerPage,
+              filter,
+              debouncedSearch,
+              tab,
+            ],
+            (oldData: Subscriptions[] | undefined) => {
+              if (!oldData) return [payload.new as Subscriptions];
+              return [
+                payload.new as Subscriptions,
+                ...oldData.slice(0, itemsPerPage - 1),
+              ];
             },
           );
         },
@@ -88,7 +137,7 @@ const OrdersTable = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, page]);
+  }, [queryClient, orders, supabase]);
 
   return (
     <div className="flex w-full flex-col items-center gap-4 pb-10">
@@ -96,9 +145,10 @@ const OrdersTable = () => {
         <TableHeader>
           <TableRow>
             <TableHead>Order ID</TableHead>
-            <TableHead>Customer</TableHead>
+            <TableHead>Quick Delivery</TableHead>
             <TableHead>Plan</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -110,6 +160,9 @@ const OrdersTable = () => {
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-32" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-24" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-24" />

@@ -3,27 +3,42 @@
 import { useQueryState } from "nuqs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OrdersTable from "@/components/orders/OrdersTable";
+import { OrderStatus } from "@/types/search.types";
+
+const tabs = [
+  { value: OrderStatus.DRAFT, label: "Draft" },
+  { value: OrderStatus.PAID, label: "Paid" },
+  { value: OrderStatus.COMPLETED, label: "Completed" },
+];
 const TabedOrders = () => {
-  const [tab, setTab] = useQueryState("tab", {
-    defaultValue: "completed",
+  const [tab, setTab] = useQueryState<OrderStatus>("tab", {
+    defaultValue: OrderStatus.COMPLETED,
+    parse: (value) => {
+      if (Object.values(OrderStatus).includes(value as OrderStatus)) {
+        return value as OrderStatus;
+      }
+      return OrderStatus.COMPLETED;
+    },
   });
   return (
     <Tabs
-      defaultValue="completed"
+      defaultValue={OrderStatus.COMPLETED}
       className="w-full"
-      onValueChange={setTab}
+      onValueChange={(value) => setTab(value as OrderStatus)}
       value={tab}
     >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="new">New</TabsTrigger>
-        <TabsTrigger value="completed">Completed</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-3">
+        {tabs.map((tab) => (
+          <TabsTrigger key={tab.value} value={tab.value}>
+            {tab.label}
+          </TabsTrigger>
+        ))}
       </TabsList>
-      <TabsContent value="new">
-        <OrdersTable />
-      </TabsContent>
-      <TabsContent value="completed">
-        <OrdersTable />
-      </TabsContent>
+      {tabs.map((tab) => (
+        <TabsContent key={tab.value} value={tab.value}>
+          <OrdersTable />
+        </TabsContent>
+      ))}
     </Tabs>
   );
 };

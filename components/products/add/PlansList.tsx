@@ -36,8 +36,10 @@ const PlansList = () => {
       description: `IPTV on ${offers.length + 1} devices`,
       plans: [],
     };
+
     setOffers([...offers, newOffer]);
   };
+
   return (
     <div className="flex w-full flex-col gap-4 py-10">
       <h1 className="mb-8 text-3xl font-bold">Edit Offers</h1>
@@ -57,7 +59,10 @@ const PlansList = () => {
               <AccordionItem value={offer.id} key={offer.id}>
                 <AccordionTrigger>{offer.name}</AccordionTrigger>
                 <AccordionContent>
-                  <PlanCard key={offer.id} offer={offer} />
+                  <PlanCard
+                    offer={offer}
+                    isNewOffer={parseInt(offer.id) > (data?.length || 0)}
+                  />
                 </AccordionContent>
               </AccordionItem>
             ))}

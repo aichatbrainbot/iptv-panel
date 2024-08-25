@@ -8,7 +8,7 @@ import { Subscriptions } from "@/types/tables.types";
 const getRecentOrders = async (
   page: number = 1,
   limit: number = 5,
-  tab: string = "completed",
+  tab?: string,
   filter?: SearchFilter | undefined,
   search?: string | null,
 ) => {
@@ -17,12 +17,20 @@ const getRecentOrders = async (
   let query = supabase
     .from("subscriptions")
     .select("*")
-    .eq("status", tab)
     .order("created_at", { ascending: false })
     .range(start, end);
 
+  if (tab) {
+    query = query.eq("status", tab);
+  } else {
+    query = query.eq("status", "paid");
+  }
+
   if (filter && search?.length && search?.length > 3) {
     switch (filter) {
+      case SearchFilter.SUB_ID:
+        query = query.eq("id", search);
+        break;
       case SearchFilter.ORDER_ID:
         query = query.ilike("order_id", `%${search}%`);
         break;
@@ -51,9 +59,8 @@ const getRecentOrders = async (
           );
         }
         break;
-      // case SearchFilter.USER_PHONE:
-      //   query = query.ilike("user_phone", `%${search}%`);
-      //   break;
+      default:
+        break;
     }
   }
 

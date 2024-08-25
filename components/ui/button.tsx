@@ -31,12 +31,12 @@ const buttonVariants = cva(
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-left after:scale-x-100 hover:after:origin-bottom-right hover:after:scale-x-0 after:transition-transform after:ease-in-out after:duration-300",
         linkHover2:
           "relative after:absolute after:bg-primary after:bottom-2 after:h-[1px] after:w-2/3 after:origin-bottom-right after:scale-x-0 hover:after:origin-bottom-left hover:after:scale-x-100 after:transition-transform after:ease-in-out after:duration-300",
-        placed: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-        shipping:
+        paid: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+        quick:
           "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-        received:
+        completed:
           "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-        notplaced: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+        draft: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
       },
       size: {
         default: "h-10 px-4 py-2",

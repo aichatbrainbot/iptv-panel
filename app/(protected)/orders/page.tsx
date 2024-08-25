@@ -4,6 +4,7 @@ import TabedOrders from "./TabedOrders";
 import SearchBarAndFilters from "./OrdersSearch";
 
 const selectItems = [
+  { value: SearchFilter.SUB_ID, label: "Sub ID" },
   { value: SearchFilter.ORDER_ID, label: "Order ID" },
   { value: SearchFilter.USER_EMAIL, label: "User Email" },
   { value: SearchFilter.PAYMENT_EMAIL, label: "Payment Email" },

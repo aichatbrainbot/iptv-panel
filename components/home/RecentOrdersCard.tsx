@@ -11,7 +11,6 @@ import OrderRows from "./OrderRows";
 
 export default async function RecentOrdersCard() {
   const orders = await getRecentOrders();
-  // set timeout
   return (
     <Card>
       <CardHeader>

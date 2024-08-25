@@ -11,21 +11,21 @@ export type Database = {
     Tables: {
       devices: {
         Row: {
-          device_type: string | null
+          device_type: string
           id: string
-          mac_address: string | null
+          mac_address: string
           subscription_id: string | null
         }
         Insert: {
-          device_type?: string | null
+          device_type: string
           id?: string
-          mac_address?: string | null
+          mac_address: string
           subscription_id?: string | null
         }
         Update: {
-          device_type?: string | null
+          device_type?: string
           id?: string
-          mac_address?: string | null
+          mac_address?: string
           subscription_id?: string | null
         }
         Relationships: [
@@ -40,40 +40,58 @@ export type Database = {
       }
       subscriptions: {
         Row: {
+          adult_content: boolean | null
+          connections: string | null
           country_code: string | null
           created_at: string | null
           email: string | null
           full_name: string | null
           id: string
           order_id: string | null
+          order_number: number
           plan: Database["public"]["Enums"]["subscription_plan"]
           price: number
+          quick_delivery: boolean | null
           status: string | null
+          subscription_type: string | null
           user_id: string
+          vod: boolean | null
         }
         Insert: {
+          adult_content?: boolean | null
+          connections?: string | null
           country_code?: string | null
           created_at?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
           order_id?: string | null
+          order_number?: never
           plan: Database["public"]["Enums"]["subscription_plan"]
           price: number
+          quick_delivery?: boolean | null
           status?: string | null
+          subscription_type?: string | null
           user_id: string
+          vod?: boolean | null
         }
         Update: {
+          adult_content?: boolean | null
+          connections?: string | null
           country_code?: string | null
           created_at?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
           order_id?: string | null
+          order_number?: never
           plan?: Database["public"]["Enums"]["subscription_plan"]
           price?: number
+          quick_delivery?: boolean | null
           status?: string | null
+          subscription_type?: string | null
           user_id?: string
+          vod?: boolean | null
         }
         Relationships: [
           {
@@ -111,6 +129,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_most_occurring_country_codes: {
+        Args: {
+          limit_num: number
+        }
+        Returns: {
+          country_code: string
+          occurrences: number
+        }[]
+      }
       most_selling_plan: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -120,6 +147,15 @@ export type Database = {
         Returns: {
           plan_name: string
           count: number
+        }[]
+      }
+      total_payments_over_days: {
+        Args: {
+          num_days: number
+        }
+        Returns: {
+          payment_date: string
+          total_payments: number
         }[]
       }
       total_sales_overall: {

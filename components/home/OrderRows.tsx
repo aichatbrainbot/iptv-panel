@@ -1,15 +1,13 @@
 "use client";
 import { supabase } from "@/clients/supabaseCLient";
-import { Devices, Subscriptions } from "@/types/tables.types";
-import { useState, useEffect } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import { getEmailAndDevices } from "@/db/service/email-service";
+import { OrderStatus } from "@/types/search.types";
+import { Subscriptions } from "@/types/tables.types";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,11 +16,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { format } from "date-fns";
-import { getSubDevices } from "@/db/data/device-data";
-import { toast } from "sonner";
-import { useQueries, useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 interface Props {
   initialOrders: Subscriptions[];
@@ -66,9 +68,9 @@ export const OrderRow = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: devices, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["devices", order.id],
-    queryFn: () => getSubDevices(order.id),
+    queryFn: () => getEmailAndDevices(order.id, order.user_id),
     enabled: isOpen,
   });
 
@@ -78,29 +80,52 @@ export const OrderRow = ({
         <TableRow key={index}>
           {" "}
           <TableCell>{index + 1}</TableCell>{" "}
-          <TableCell>{order.full_name}</TableCell>{" "}
+          <TableCell>
+            <Badge variant={order.quick_delivery ? "quick" : "outline"}>
+              {order.quick_delivery ? "Quick Delivery" : "Standard Delivery"}
+            </Badge>
+          </TableCell>{" "}
           <TableCell>{order.plan}</TableCell>{" "}
-          <TableCell className="text-right">$ {order.price}</TableCell>{" "}
+          <TableCell>$ {order.price}</TableCell>{" "}
+          <TableCell className="text-right">
+            <Badge variant={order.status as OrderStatus}>{order.status}</Badge>
+          </TableCell>{" "}
         </TableRow>
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Order Details</DialogTitle>
-          <DialogDescription>
-            Detailed information about order #{index + 1}
-          </DialogDescription>
+        <DialogHeader className="my-4 grid grid-cols-3 items-center">
+          <div className="col-span-2">
+            {" "}
+            <DialogTitle>Order Details</DialogTitle>
+            <DialogDescription>
+              Detailed information about order #{order.order_number}
+            </DialogDescription>
+          </div>
+          <Button
+            variant={order.quick_delivery ? "quick" : "outline"}
+            className="col-span-1"
+          >
+            Process Order
+          </Button>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <h3 className="mb-2 text-lg font-semibold">Customer Information</h3>
+            <p className="flex items-center gap-2">
+              <strong>Email:</strong>{" "}
+              {isLoading ? <Skeleton className="h-4 w-full" /> : data?.email}
+            </p>
             <p>
               <strong>Name:</strong> {order.full_name}
             </p>
             <p>
-              <strong>Email:</strong> {order.email}
+              <strong>Payement Email:</strong> {order.email}
             </p>
             <p>
               <strong>Country:</strong> {order.country_code}
+            </p>
+            <p>
+              <strong>User ID:</strong> {order.user_id}
             </p>
           </div>
           <div>
@@ -108,9 +133,7 @@ export const OrderRow = ({
             <p>
               <strong>Order ID:</strong> {order.order_id}
             </p>
-            <p>
-              <strong>User ID:</strong> {order.user_id}
-            </p>
+
             <p>
               <strong>Plan:</strong> {order.plan}
             </p>
@@ -125,6 +148,17 @@ export const OrderRow = ({
             </p>
             <p>
               <strong>PayPal Transaction ID:</strong> {order.order_id}
+            </p>
+            <p>
+              <strong>VOD:</strong> {order.vod ? "Yes" : "No"}
+            </p>
+            <p>
+              <strong>Adult Content:</strong>{" "}
+              {order.adult_content ? "Yes" : "No"}
+            </p>
+            <p>
+              <strong>Quick Delivery:</strong>{" "}
+              {order.quick_delivery ? "Yes" : "No"}
             </p>
           </div>
         </div>
@@ -151,7 +185,7 @@ export const OrderRow = ({
                       </TableCell>
                     </TableRow>
                   ))
-                : devices?.map((device, index) => (
+                : data?.devices?.map((device, index) => (
                     <TableRow key={index}>
                       <TableCell>{device.device_type}</TableCell>
                       <TableCell className="text-right">
