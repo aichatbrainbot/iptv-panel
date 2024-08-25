@@ -78,4 +78,34 @@ const getUserSubscriptions = async (userId: string) => {
   return handleStatus(status, data, error) as Subscriptions[];
 };
 
-export { getRecentOrders, getUserSubscriptions };
+const getSubscription = async (id: string) => {
+  const { data, error, status } = await supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  return handleStatus(status, data, error) as Subscriptions;
+};
+
+const updateSubscription = async (
+  id: string,
+  props: Partial<Subscriptions>,
+) => {
+  const { data, error, status } = await supabase
+    .from("subscriptions")
+    //@ts-ignore
+    .update(props)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  return handleStatus(status, data, error) as Subscriptions;
+};
+
+export {
+  getRecentOrders,
+  getUserSubscriptions,
+  getSubscription,
+  updateSubscription,
+};

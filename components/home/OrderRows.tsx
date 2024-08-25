@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { useRouter } from "next/navigation";
 
 interface Props {
   initialOrders: Subscriptions[];
@@ -66,6 +67,7 @@ export const OrderRow = ({
   order: Subscriptions;
   index: number;
 }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -104,6 +106,7 @@ export const OrderRow = ({
           <Button
             variant={order.quick_delivery ? "quick" : "outline"}
             className="col-span-1"
+            onClick={() => router.push(`/orders/${order.id}`)}
           >
             Process Order
           </Button>
