@@ -14,16 +14,19 @@ export type Database = {
           content: Json | null
           created_at: string
           id: number
+          title: string | null
         }
         Insert: {
           content?: Json | null
           created_at?: string
           id?: number
+          title?: string | null
         }
         Update: {
           content?: Json | null
           created_at?: string
           id?: number
+          title?: string | null
         }
         Relationships: []
       }
@@ -58,68 +61,69 @@ export type Database = {
       }
       subscriptions: {
         Row: {
+          additional_info: string | null
           adult_content: boolean | null
           connections: string | null
           country_code: string | null
           created_at: string | null
-          email: string | null
-          full_name: string | null
           id: string
-          order_id: string | null
           order_number: number
+          payement_email: string | null
+          payement_full_name: string | null
+          payement_order_id: string | null
           plan: Database["public"]["Enums"]["subscription_plan"]
           price: number
           quick_delivery: boolean | null
           status: string | null
           subscription_type: string | null
-          user_id: string
+          user_email: string | null
+          user_name: string | null
+          user_phone: string | null
           vod: boolean | null
         }
         Insert: {
+          additional_info?: string | null
           adult_content?: boolean | null
           connections?: string | null
           country_code?: string | null
           created_at?: string | null
-          email?: string | null
-          full_name?: string | null
           id?: string
-          order_id?: string | null
           order_number?: never
+          payement_email?: string | null
+          payement_full_name?: string | null
+          payement_order_id?: string | null
           plan: Database["public"]["Enums"]["subscription_plan"]
           price: number
           quick_delivery?: boolean | null
           status?: string | null
           subscription_type?: string | null
-          user_id: string
+          user_email?: string | null
+          user_name?: string | null
+          user_phone?: string | null
           vod?: boolean | null
         }
         Update: {
+          additional_info?: string | null
           adult_content?: boolean | null
           connections?: string | null
           country_code?: string | null
           created_at?: string | null
-          email?: string | null
-          full_name?: string | null
           id?: string
-          order_id?: string | null
           order_number?: never
+          payement_email?: string | null
+          payement_full_name?: string | null
+          payement_order_id?: string | null
           plan?: Database["public"]["Enums"]["subscription_plan"]
           price?: number
           quick_delivery?: boolean | null
           status?: string | null
           subscription_type?: string | null
-          user_id?: string
+          user_email?: string | null
+          user_name?: string | null
+          user_phone?: string | null
           vod?: boolean | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "subscriptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_data: {
         Row: {

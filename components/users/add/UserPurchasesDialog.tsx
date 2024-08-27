@@ -20,12 +20,12 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type UserPurchasesDialogProps = {
-  userId: string;
+  userEmail: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 const UserPurchasesDialog = ({
-  userId,
+  userEmail,
   open,
   onOpenChange,
 }: UserPurchasesDialogProps) => {
@@ -34,8 +34,8 @@ const UserPurchasesDialog = ({
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["purchases", userId],
-    queryFn: () => getUserSubscriptions(userId),
+    queryKey: ["purchases", userEmail],
+    queryFn: () => getUserSubscriptions(userEmail),
     enabled: open,
   });
   if (isError) toast.error("Failed to fetch user purchases");
@@ -49,7 +49,7 @@ const UserPurchasesDialog = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Purchase ID</TableHead>
+                <TableHead>Order N°</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Plan</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
@@ -65,9 +65,9 @@ const UserPurchasesDialog = ({
               ) : (
                 purchases?.map((purchase) => (
                   <TableRow key={purchase.id} className="cursor-pointer">
-                    <TableCell>{purchase.order_id}</TableCell>
+                    <TableCell>{purchase.order_number}</TableCell>
                     <TableCell>
-                      {format(new Date(purchase.created_at!), "PPpp")}
+                      {format(new Date(purchase.created_at!), "PPP")}
                     </TableCell>
                     <TableCell>{purchase.plan}</TableCell>
                     <TableCell className="text-right">

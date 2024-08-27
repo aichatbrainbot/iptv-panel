@@ -26,40 +26,18 @@ const getRecentOrders = async (
     query = query.eq("status", "paid");
   }
 
-  if (filter && search?.length && search?.length > 3) {
+  if (filter && search?.length && search?.length >= 1) {
     switch (filter) {
-      case SearchFilter.SUB_ID:
-        query = query.eq("id", search);
-        break;
-      case SearchFilter.ORDER_ID:
-        query = query.ilike("order_id", `%${search}%`);
-        break;
-      case SearchFilter.PAYMENT_EMAIL:
-        query = query.ilike("email", `%${search}%`);
-        break;
-      case SearchFilter.COUNTRY_CODE:
-        query = query.ilike("country_code", `%${search}%`);
-        break;
-      case SearchFilter.PAYMENT_FULL_NAME:
-        query = query.ilike("payment_full_name", `%${search}%`);
-        break;
-      case SearchFilter.USER_ID:
-        query = query.ilike("user_id", `%${search}%`);
-        break;
-      case SearchFilter.USER_EMAIL:
-        const { data } = await supabase
-          .from("user_data")
-          .select("user_id")
-          .ilike("email", `%${search}%`);
-        if (data) {
-          console.log(data);
-          query = query.in(
-            "user_id",
-            data.map((user) => user.user_id),
-          );
+      case SearchFilter.ORDER_NUMBER:
+        const orderNumber = parseInt(search);
+        console.log(orderNumber);
+
+        if (!isNaN(orderNumber)) {
+          query = query.eq("order_number", orderNumber);
         }
         break;
       default:
+        query = query.ilike(filter, `%${search}%`);
         break;
     }
   }
@@ -69,11 +47,11 @@ const getRecentOrders = async (
   return handleStatus(status, data, error) as Subscriptions[];
 };
 
-const getUserSubscriptions = async (userId: string) => {
+const getUserSubscriptions = async (userEmail: string) => {
   const { data, error, status } = await supabase
     .from("subscriptions")
     .select("*")
-    .eq("user_id", userId);
+    .eq("user_email", userEmail);
 
   return handleStatus(status, data, error) as Subscriptions[];
 };

@@ -1,7 +1,6 @@
 "use client";
 
 import { EditorContent, EditorRoot, JSONContent } from "novel";
-import { ImageResizer } from "novel/extensions";
 import React from "react";
 import { defaultExtensions } from "../extensions";
 import { Button } from "@/components/ui/button";
@@ -41,7 +40,6 @@ const BlogWrapper = ({ id, content }: BlogWrapperProps) => {
             initialContent={content}
             className="relative min-h-[500px] w-full max-w-screen-lg bg-background sm:mb-3 sm:rounded-lg"
             extensions={extensions}
-            slotAfter={<ImageResizer />}
             editorProps={{
               attributes: {
                 class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,

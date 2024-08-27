@@ -32,7 +32,7 @@ const SearchBarAndFilters = ({ selectItems }: OrdersSearchProps) => {
         placeholder="Search orders"
       />
       <Select value={filter} onValueChange={setFilter}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-1/3">
           <SelectValue placeholder="Search by" />
         </SelectTrigger>
         <SelectContent>

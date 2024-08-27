@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { signOut } from "@/db/data/users-data";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type OpenSections = {
   orderManagement: boolean;
@@ -36,6 +37,7 @@ type OpenSections = {
 };
 
 export default function Component({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [openSections, setOpenSections] = useState<OpenSections>({
     orderManagement: false,
     userManagement: false,
@@ -95,8 +97,11 @@ export default function Component({ children }: { children: React.ReactNode }) {
     children: React.ReactNode;
     href: string;
   }) => (
-    <div className="cursor-pointer rounded-md px-10 py-1 text-sm hover:bg-muted">
-      <Link href={href}>{children}</Link>
+    <div
+      className="cursor-pointer rounded-md px-10 py-1 text-sm hover:bg-muted"
+      onClick={() => router.push(href)}
+    >
+      {children}
     </div>
   );
 

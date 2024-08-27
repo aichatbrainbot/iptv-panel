@@ -1,6 +1,6 @@
 "use client";
 import { TrendingUp } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -49,7 +49,7 @@ const PayementPerDayChart = ({ data }: Props) => {
         <div className="flex flex-col gap-2">
           <CardTitle>Payements per day</CardTitle>
           <CardDescription>
-            Showing total payements for the last 30 days
+            Showing total payements for the last {days} days
           </CardDescription>
         </div>
         <div className="flex items-center space-x-2">
@@ -80,30 +80,32 @@ const PayementPerDayChart = ({ data }: Props) => {
             accessibilityLayer
             data={data}
             margin={{
-              left: 21,
-              right: 12,
+              right: 21,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical horizontal />
             <XAxis
+              reversed
               dataKey="payment_date"
               tickLine={true}
-              axisLine={false}
+              axisLine={true}
               tickMargin={8}
               tickFormatter={(value) => {
                 return format(new Date(value), "dd MMM");
               }}
             />
+            <YAxis dataKey="total_payments" tickLine={true} axisLine={true} />
             <ChartTooltip
-              cursor={false}
+              cursor={true}
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
+              animationDuration={1000}
               dataKey="total_payments"
-              type="natural"
+              type="bump"
               stroke="var(--color-total_payments)"
               strokeWidth={3}
-              dot={false}
+              dot={true}
             />
           </LineChart>
         </ChartContainer>
@@ -114,7 +116,7 @@ const PayementPerDayChart = ({ data }: Props) => {
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total Sales for the last 30 days
+          Showing total Sales for the last {days} days
         </div>
       </CardFooter>
     </Card>

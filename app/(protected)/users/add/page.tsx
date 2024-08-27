@@ -6,7 +6,6 @@ import PageWrapper from "@/components/PageWrapper";
 const selectItems = [
   { value: SearchFilter.USER_EMAIL, label: "User Email" },
   { value: SearchFilter.USER_PHONE, label: "User Phone" },
-  { value: SearchFilter.USER_ID, label: "User ID" },
 ];
 
 const page = async () => {

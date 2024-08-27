@@ -72,7 +72,7 @@ export const OrderRow = ({
 
   const { data, isLoading } = useQuery({
     queryKey: ["devices", order.id],
-    queryFn: () => getEmailAndDevices(order.id, order.user_id),
+    queryFn: () => getEmailAndDevices(order.id),
     enabled: isOpen,
   });
 
@@ -81,7 +81,7 @@ export const OrderRow = ({
       <DialogTrigger asChild className="cursor-pointer">
         <TableRow key={index}>
           {" "}
-          <TableCell>{index + 1}</TableCell>{" "}
+          <TableCell>{order.order_number}</TableCell>{" "}
           <TableCell>
             <Badge variant={order.quick_delivery ? "quick" : "outline"}>
               {order.quick_delivery ? "Quick Delivery" : "Standard Delivery"}
@@ -113,44 +113,24 @@ export const OrderRow = ({
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h3 className="mb-2 text-lg font-semibold">Customer Information</h3>
+            <h3 className="mb-2 text-xl font-semibold text-gray-400">
+              Customer Information
+            </h3>
             <p className="flex items-center gap-2">
-              <strong>Email:</strong>{" "}
-              {isLoading ? <Skeleton className="h-4 w-full" /> : data?.email}
+              <strong>Email:</strong> {order.user_email}
             </p>
             <p>
-              <strong>Name:</strong> {order.full_name}
+              <strong>Name:</strong> {order.user_name}
             </p>
             <p>
-              <strong>Payement Email:</strong> {order.email}
-            </p>
-            <p>
-              <strong>Country:</strong> {order.country_code}
-            </p>
-            <p>
-              <strong>User ID:</strong> {order.user_id}
-            </p>
-          </div>
-          <div>
-            <h3 className="mb-2 text-lg font-semibold">Order Information</h3>
-            <p>
-              <strong>Order ID:</strong> {order.order_id}
+              <strong>Phone:</strong> {order.user_phone}
             </p>
 
+            <h3 className="mb-2 mt-6 text-xl font-semibold text-gray-400">
+              Order Information
+            </h3>
             <p>
-              <strong>Plan:</strong> {order.plan}
-            </p>
-            <p>
-              <strong>Price:</strong> ${order.price}
-            </p>
-            <p>
-              <strong>Date:</strong>{" "}
-              {order.created_at
-                ? format(new Date(order.created_at), "PPP")
-                : "N/A"}
-            </p>
-            <p>
-              <strong>PayPal Transaction ID:</strong> {order.order_id}
+              <strong>Connections:</strong> {order.connections}
             </p>
             <p>
               <strong>VOD:</strong> {order.vod ? "Yes" : "No"}
@@ -164,6 +144,50 @@ export const OrderRow = ({
               {order.quick_delivery ? "Yes" : "No"}
             </p>
           </div>
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-400">
+              Payment Information
+            </h3>
+            <p>
+              <strong>PayPal Transaction ID:</strong> {order.payement_order_id}
+            </p>
+            <p>
+              <strong>Payement Email:</strong> {order.payement_email}
+            </p>
+            <p>
+              <strong>Payement Status:</strong>{" "}
+              <Badge variant={order.status as OrderStatus}>
+                {order.status}
+              </Badge>
+            </p>
+            <p>
+              <strong>Payement Name:</strong> {order.payement_full_name}
+            </p>
+            <p>
+              <strong>Country:</strong> {order.country_code}
+            </p>
+            <h3 className="mb-2 mt-6 text-xl font-semibold text-gray-400">
+              Order Details
+            </h3>
+            <p>
+              <strong>Plan:</strong> {order.plan}
+            </p>
+            <p>
+              <strong>Price:</strong> ${order.price}
+            </p>
+            <p>
+              <strong>Date:</strong>{" "}
+              {order.created_at
+                ? format(new Date(order.created_at), "PPP")
+                : "N/A"}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-between">
+          <h3 className="mb-2 mt-6 text-xl font-semibold text-gray-400">
+            Additional Information
+          </h3>
+          <p>{order.additional_info}</p>
         </div>
         <div className="mt-6">
           <h3 className="mb-2 text-lg font-semibold">
@@ -188,7 +212,7 @@ export const OrderRow = ({
                       </TableCell>
                     </TableRow>
                   ))
-                : data?.devices?.map((device, index) => (
+                : data?.map((device, index) => (
                     <TableRow key={index}>
                       <TableCell>{device.device_type}</TableCell>
                       <TableCell className="text-right">

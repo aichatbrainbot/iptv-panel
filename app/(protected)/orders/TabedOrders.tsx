@@ -12,17 +12,17 @@ const tabs = [
 ];
 const TabedOrders = () => {
   const [tab, setTab] = useQueryState<OrderStatus>("tab", {
-    defaultValue: OrderStatus.COMPLETED,
+    defaultValue: OrderStatus.PAID,
     parse: (value) => {
       if (Object.values(OrderStatus).includes(value as OrderStatus)) {
         return value as OrderStatus;
       }
-      return OrderStatus.COMPLETED;
+      return OrderStatus.DRAFT;
     },
   });
   return (
     <Tabs
-      defaultValue={OrderStatus.COMPLETED}
+      defaultValue={OrderStatus.PAID}
       className="w-full"
       onValueChange={(value) => setTab(value as OrderStatus)}
       value={tab}

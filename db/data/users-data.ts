@@ -45,18 +45,16 @@ const getAllUsers = async (
   const start = (page - 1) * perPage;
   const end = page * perPage - 1;
   let query = supabase
-    .from("user_data")
-    .select("*")
+    .from("subscriptions")
+    .select("user_email,user_phone")
+    .not("user_email", "is", null)
     .range(start, end)
     .order("created_at", { ascending: true });
 
-  if (filter && search?.length && search?.length > 3) {
+  if (filter && search?.length && search?.length > 1) {
     switch (filter) {
-      case SearchFilter.USER_ID:
-        query = query.ilike("user_id", `%${search}%`);
-        break;
       case SearchFilter.USER_EMAIL:
-        query = query.ilike("email", `%${search}%`);
+        query = query.ilike("user_email", `%${search}%`);
         break;
       case SearchFilter.USER_PHONE:
         query = query.ilike("user_phone", `%${search}%`);
@@ -66,7 +64,10 @@ const getAllUsers = async (
 
   const { data, error, status } = await query;
 
-  return handleStatus(status, data, error) as UserData[];
+  return handleStatus(status, data, error) as {
+    user_email: string;
+    user_phone: string;
+  }[];
 };
 
 const getAllUsersAsAdmin = async (page: number, perPage: number) => {

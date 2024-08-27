@@ -23,7 +23,7 @@ import { useDebounce } from "use-debounce";
 const UsersTable = () => {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const itemsPerPage = 10;
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
   const [filter] = useQueryState("filter", {
     defaultValue: SearchFilter.USER_EMAIL,
   });
@@ -50,8 +50,8 @@ const UsersTable = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>User ID</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Phone</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -71,13 +71,13 @@ const UsersTable = () => {
                 </TableRow>
               ))
             : users &&
-              users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.user_id}</TableCell>
-                  <TableCell>{user.email}</TableCell>
+              users.map((user, index) => (
+                <TableRow key={index}>
+                  <TableCell>{user.user_email}</TableCell>
+                  <TableCell>{user.user_phone}</TableCell>
                   <TableCell>
                     <Button
-                      onClick={() => setSelectedUserId(user.user_id)}
+                      onClick={() => setSelectedEmail(user.user_email)}
                       variant="outline"
                     >
                       View Purchases
@@ -103,11 +103,11 @@ const UsersTable = () => {
           Next <ArrowRightIcon className="ml-2 h-4 w-4" />
         </Button>
       </div>
-      {selectedUserId && (
+      {selectedEmail && (
         <UserPurchasesDialog
-          userId={selectedUserId}
-          open={!!selectedUserId}
-          onOpenChange={(open) => !open && setSelectedUserId(null)}
+          userEmail={selectedEmail}
+          open={!!selectedEmail}
+          onOpenChange={(open) => !open && setSelectedEmail(null)}
         />
       )}
     </div>

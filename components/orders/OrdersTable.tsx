@@ -32,24 +32,8 @@ import { Skeleton } from "../ui/skeleton";
 const OrdersTable = () => {
   const supabase = createClient();
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [filter] = useQueryState<SearchFilter>("filter", {
-    defaultValue: SearchFilter.ORDER_ID,
-    parse: (value) => {
-      if (Object.values(SearchFilter).includes(value as SearchFilter)) {
-        return value as SearchFilter;
-      }
-      return SearchFilter.ORDER_ID;
-    },
-  });
-  const [tab] = useQueryState<OrderStatus>("tab", {
-    defaultValue: OrderStatus.COMPLETED,
-    parse: (value) => {
-      if (Object.values(OrderStatus).includes(value as OrderStatus)) {
-        return value as OrderStatus;
-      }
-      return OrderStatus.COMPLETED;
-    },
-  });
+  const [filter] = useQueryState("filter");
+  const [tab] = useQueryState("tab");
 
   const [search] = useQueryState("search");
   const [debouncedSearch] = useDebounce(search, 500);
@@ -72,7 +56,7 @@ const OrdersTable = () => {
       getRecentOrders(
         page,
         itemsPerPage,
-        tab,
+        tab as OrderStatus,
         filter as SearchFilter,
         debouncedSearch,
       ),
@@ -142,7 +126,7 @@ const OrdersTable = () => {
       <Table className="w-full">
         <TableHeader>
           <TableRow>
-            <TableHead>Order ID</TableHead>
+            <TableHead>Order N°</TableHead>
             <TableHead>Quick Delivery</TableHead>
             <TableHead>Plan</TableHead>
             <TableHead>Amount</TableHead>

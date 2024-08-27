@@ -21,16 +21,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const getEmailAndDevices = async (subId: string, userId: string) => {
-  const [devices, user] = await Promise.all([
-    getSubDevices(subId),
-    supabaseAdmin.auth.admin.getUserById(userId),
-  ]);
+const getEmailAndDevices = async (subId: string) => {
+  const devices = await getSubDevices(subId);
 
-  return {
-    email: user.data.user?.email,
-    devices,
-  };
+  return devices;
 };
 
 const sendCompletedEmail = async (
