@@ -12,12 +12,12 @@ import { OrderStatus } from "@/types/search.types";
 
 const transporter = nodemailer.createTransport({
   service: "titan",
-  host: "smtp.titan.email",
-  port: 465,
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
   secure: true,
   auth: {
-    user: "order@ronotv.com",
-    pass: "senpay@2021G",
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
@@ -36,7 +36,7 @@ const sendCompletedEmail = async (
   const emailHtml = render(EmailTemplate({ connectionInfo }));
 
   const info = await transporter.sendMail({
-    from: "order@ronotv.com",
+    from: process.env.SMTP_USER,
     to: userEmail,
     subject: `You Order ${orderNumber} is completed`,
     text: `You Order ${orderNumber} is completed`,

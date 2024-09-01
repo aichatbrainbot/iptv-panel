@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -13,11 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getUserPurchases } from "@/db/drizzle-queries/data/subscriptions-data";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { getUserSubscriptions } from "@/db/data/subscriptions-data";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type UserPurchasesDialogProps = {
   userEmail: string;
@@ -35,7 +35,7 @@ const UserPurchasesDialog = ({
     isError,
   } = useQuery({
     queryKey: ["purchases", userEmail],
-    queryFn: () => getUserSubscriptions(userEmail),
+    queryFn: () => getUserPurchases(userEmail),
     enabled: open,
   });
   if (isError) toast.error("Failed to fetch user purchases");

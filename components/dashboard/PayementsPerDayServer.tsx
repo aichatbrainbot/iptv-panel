@@ -1,7 +1,7 @@
-import { getPayementsPerDay } from "@/db/aggregations/sales-aggregation";
 import PayementsPerDayMid from "./PayementsPerDayMid";
 import { unstable_noStore as noStore } from "next/cache";
 import { Suspense } from "react";
+import { getPayementsPerDay } from "@/db/drizzle-queries/aggregations/subscription-aggregations";
 
 const PayementsPerDayServer = async () => {
   noStore();

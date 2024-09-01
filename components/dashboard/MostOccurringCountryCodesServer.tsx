@@ -1,7 +1,7 @@
-import { getMostOccurringCountryCodes } from "@/db/aggregations/sales-aggregation";
 import MostOccurringCountryCodes from "./MostOccurringCountryCodes";
 import TotaleVisitorsOfWebsite from "./TotaleVisitorsOfWebsite";
 import redis from "@/lib/redis";
+import { getMostOccurringCountryCodes } from "@/db/drizzle-queries/aggregations/subscription-aggregations";
 
 const MostOccurringCountryCodesServer = async () => {
   const [data, totalVisitorsOfSite] = await Promise.all([

@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import { getAllUsers } from "@/db/data/users-data";
+import { getAllUsers } from "@/db/drizzle-queries/data/subscriptions-data";
 import UserPurchasesDialog from "./UserPurchasesDialog";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";

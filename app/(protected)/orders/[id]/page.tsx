@@ -11,7 +11,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   return (
     <PageWrapper className="justify-center">
       <OrderForm
-        numberOfConnections={parseInt(order.connections!)}
+        numberOfConnections={parseInt(order.connections || "1")}
         order={order}
       />
     </PageWrapper>

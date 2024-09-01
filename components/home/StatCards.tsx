@@ -1,18 +1,21 @@
 import React from "react";
 import StatCard from "./StatCard";
 import { DollarSign, BarChart, Users, Package } from "lucide-react";
-import {
-  getTotalSalesOverall,
-  getTotalSalesToday,
-  getUsersCount,
-} from "@/db/aggregations/sales-aggregation";
 
+import {
+  getDistinctTotaleUsersCount,
+  getDraftOrdersCount,
+  getTotaleOverallSales,
+  getTotalSalesToday,
+} from "@/db/drizzle-queries/aggregations/subscription-aggregations";
 const StatCards = async () => {
-  const [totalSalesToday, totalSalesOverall, usersCount] = await Promise.all([
-    getTotalSalesToday(),
-    getTotalSalesOverall(),
-    getUsersCount(),
-  ]);
+  const [totalSalesToday, totalSalesOverall, usersCount, draftOrdersCount] =
+    await Promise.all([
+      getTotalSalesToday(),
+      getTotaleOverallSales(),
+      getDistinctTotaleUsersCount(),
+      getDraftOrdersCount(),
+    ]);
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -35,8 +38,8 @@ const StatCards = async () => {
         icon={Users}
       />
       <StatCard
-        title="Inventory Items"
-        value="789"
+        title="Draft Orders"
+        value={`${draftOrdersCount || 0}`}
         description="43 low stock alerts"
         icon={Package}
       />

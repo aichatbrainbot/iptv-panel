@@ -2,8 +2,6 @@
 
 import { supabase } from "@/clients/supabaseCLient";
 import { handleStatus } from "@/lib/handleStatus";
-import logger from "@/lib/logger";
-import supabaseAdmin from "@/lib/supabase-admin";
 import { OrderStatus } from "@/types/search.types";
 import {
   MostOccurringCountryCodes,
@@ -29,12 +27,12 @@ const getMostSellingPlans = async () => {
 };
 
 const getUsersCount = async () => {
-  const { data, error } = await supabaseAdmin.auth.admin.listUsers();
-  if (error) {
-    logger.error(error);
-    return 0;
-  }
-  return data?.users.length;
+  const { data, error, status, count } = await supabase
+    .from("subscriptions")
+    .select("id", { count: "exact" })
+    .in("status", [OrderStatus.PAID, OrderStatus.COMPLETED]);
+
+  return handleStatus(status, count, error) as number;
 };
 
 const getPayementsPerDay = async (days: number) => {
@@ -91,11 +89,11 @@ const getAddonsAnalytics = async (): Promise<AddonsAnalytics> => {
 };
 
 export {
-  getTotalSalesToday,
-  getTotalSalesOverall,
-  getMostSellingPlans,
-  getUsersCount,
-  getPayementsPerDay,
-  getMostOccurringCountryCodes,
   getAddonsAnalytics,
+  getMostOccurringCountryCodes,
+  getMostSellingPlans,
+  getPayementsPerDay,
+  getTotalSalesOverall,
+  getTotalSalesToday,
+  getUsersCount,
 };

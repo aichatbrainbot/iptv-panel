@@ -29,7 +29,7 @@ function TotaleVisitorsOfWebsite({ data, totalVisitorsOfSite }: Props) {
   const chartData = data.map((item) => ({
     country_code: item.country_code,
     customers: item.occurrences,
-    fill: `var(--color-${item.country_code.toLowerCase()})`,
+    fill: `var(--color-${item.country_code?.toLowerCase()})`,
   }));
 
   const chartConfig = {
@@ -38,7 +38,7 @@ function TotaleVisitorsOfWebsite({ data, totalVisitorsOfSite }: Props) {
     },
     ...Object.fromEntries(
       data.map((item, index) => [
-        item.country_code.toLowerCase(),
+        item.country_code?.toLowerCase(),
         {
           label: item.country_code,
           color: `hsl(var(--chart-${index + 1}))`,

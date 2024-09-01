@@ -45,7 +45,7 @@ const OrdersTable = () => {
 
   const { data: orders, isLoading } = useQuery({
     queryKey: [
-      `subscriptions?page=${page}`,
+      `subscriptions`,
       page,
       itemsPerPage,
       filter,
@@ -71,12 +71,12 @@ const OrdersTable = () => {
         (payload) => {
           queryClient.setQueryData(
             [
-              `subscriptions?page=${1}`,
-              page,
+              `subscriptions`,
+              1,
               itemsPerPage,
               filter,
               debouncedSearch,
-              tab,
+              payload.new.status,
             ],
             (oldData: Subscriptions[] | undefined) => {
               if (!oldData) return [payload.new as Subscriptions];
@@ -92,17 +92,14 @@ const OrdersTable = () => {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "subscriptions" },
         (payload) => {
-          if (payload.new.status === OrderStatus.PAID) {
-            toast.info(`New order: ${payload.new.id}`);
-          }
           queryClient.setQueryData(
             [
-              `subscriptions?page=${1}`,
-              page,
+              `subscriptions`,
+              1,
               itemsPerPage,
               filter,
               debouncedSearch,
-              tab,
+              payload.new.status,
             ],
             (oldData: Subscriptions[] | undefined) => {
               if (!oldData) return [payload.new as Subscriptions];
@@ -130,6 +127,7 @@ const OrdersTable = () => {
             <TableHead>Quick Delivery</TableHead>
             <TableHead>Plan</TableHead>
             <TableHead>Amount</TableHead>
+            <TableHead>Date</TableHead>
             <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -142,6 +140,9 @@ const OrdersTable = () => {
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-32" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-24" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-24" />

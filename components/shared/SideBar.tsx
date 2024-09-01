@@ -2,28 +2,30 @@
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { signOut } from "@/db/data/users-data";
+import { OrderStatus } from "@/types/search.types";
+import { createClient } from "@/utils/supabase/client";
 import { useMutation } from "@tanstack/react-query";
 import {
   BarChart,
   ChevronDown,
-  ChevronRight,
   ChevronLeft,
+  ChevronRight,
   CreditCard,
   LayoutDashboard,
   LifeBuoy,
   LogOut,
+  Menu,
   Package,
   Palette,
   Settings,
   ShoppingCart,
   Users,
-  Menu,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { signOut } from "@/db/data/users-data";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type OpenSections = {
   orderManagement: boolean;
@@ -37,6 +39,22 @@ type OpenSections = {
 };
 
 export default function Component({ children }: { children: React.ReactNode }) {
+  const supabase = createClient();
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime notifications")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "subscriptions" },
+        (payload) => {
+          if (payload.new.status === OrderStatus.PAID) {
+            toast.info(`New order: ${payload.new.order_number}`);
+          }
+        },
+      )
+      .subscribe();
+  }, [supabase]);
+
   const router = useRouter();
   const [openSections, setOpenSections] = useState<OpenSections>({
     orderManagement: false,

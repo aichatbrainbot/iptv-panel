@@ -89,6 +89,11 @@ export const OrderRow = ({
           </TableCell>{" "}
           <TableCell>{order.plan}</TableCell>{" "}
           <TableCell>$ {order.price}</TableCell>{" "}
+          <TableCell>
+            {order.created_at
+              ? format(new Date(order.created_at), "dd-MM-yyyy")
+              : "N/A"}
+          </TableCell>{" "}
           <TableCell className="text-right">
             <Badge variant={order.status as OrderStatus}>{order.status}</Badge>
           </TableCell>{" "}
