@@ -1,14 +1,13 @@
 "use server";
 
-import supabaseAdmin from "@/lib/supabase-admin";
-import { getSubDevices } from "../data/device-data";
 import { ConnectionInfo } from "@/components/orders/id/OrderForm";
-import { render } from "@react-email/components";
-import { EmailTemplate } from "./EmailTemplate";
-import nodemailer from "nodemailer";
-import { updateSubscription } from "../data/subscriptions-data";
 import logger from "@/lib/logger";
 import { OrderStatus } from "@/types/search.types";
+import { render } from "@react-email/components";
+import nodemailer from "nodemailer";
+import { getSubDevices } from "../data/device-data";
+import { updateSubscription } from "../data/subscriptions-data";
+import { EmailTemplate } from "./EmailTemplate";
 
 const transporter = nodemailer.createTransport({
   service: "titan",

@@ -39,7 +39,6 @@ const formSchema = z.object({
 });
 
 export type ConnectionInfo = {
-  playlistName: string;
   username: string;
   password: string;
   output: string;
@@ -76,6 +75,7 @@ export default function Component({
     mutationFn: () =>
       sendCompletedEmail(
         connectionInfo,
+        // order.user_email!,
         "ayoubbensalah2004@gmail.com",
         order.id,
         order.order_number!,
@@ -98,7 +98,6 @@ export default function Component({
     const parsedUrl = new URL(url);
     const params = new URLSearchParams(parsedUrl.search);
     return {
-      playlistName: "Any Name", // You might want to allow users to input this
       username: params.get("username") || "",
       password: params.get("password") || "",
       output: params.get("output") || "",
@@ -162,7 +161,7 @@ export default function Component({
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
-              <div className="grid grid-cols-2 items-center gap-4">
+              {/* <div className="grid grid-cols-2 items-center gap-4">
                 <Label htmlFor="playlistName">Playlist Name</Label>
                 <Input
                   id="playlistName"
@@ -170,7 +169,7 @@ export default function Component({
                   readOnly
                   className="bg-transparent"
                 />
-              </div>
+              </div> */}
               <div className="grid grid-cols-2 items-center gap-4">
                 <Label htmlFor="username">Username</Label>
                 <Input

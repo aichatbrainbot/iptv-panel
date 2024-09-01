@@ -1,116 +1,112 @@
 import * as React from "react";
 import {
-  Html,
-  Button,
-  Text,
-  Container,
-  Section,
-  Row,
-  Column,
-} from "@react-email/components";
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 export function EmailTemplate(props: { connectionInfo: any[] }) {
   return (
-    <Html lang="en">
-      <Container style={containerStyle}>
-        <Section style={sectionStyle}>
-          <Text style={headerStyle}>IPTV Connection Information</Text>
-          {props.connectionInfo.map((info, index) => (
-            <Section key={index} style={connectionStyle}>
-              <Text style={subHeaderStyle}>Connection {index + 1}</Text>
-              <Row>
-                <Column>
-                  <Text style={labelStyle}>Playlist Name:</Text>
-                  <Text style={labelStyle}>Username:</Text>
-                  <Text style={labelStyle}>Password:</Text>
-                  <Text style={labelStyle}>Host/API/URL:</Text>
-                  <Text style={labelStyle}>M3U Link:</Text>
-                  <Text style={labelStyle}>EPG Link:</Text>
-                </Column>
-                <Column>
-                  <Text style={valueStyle}>{info.playlistName}</Text>
-                  <Text style={valueStyle}>{info.username}</Text>
-                  <Text style={valueStyle}>{info.password}</Text>
-                  <Text style={valueStyle}>{info.host}</Text>
-                  <Text style={valueStyle}>{info.m3uUrl}</Text>
-                  <Text style={valueStyle}>{info.epgUrl}</Text>
-                </Column>
-              </Row>
-            </Section>
-          ))}
-          <Button href="https://example.com" style={buttonStyle}>
-            View Details
-          </Button>
-          <Button
-            href={`https://wa.me/1234567890?text=Hello,%20I%20need%20help%20with%20my%20IPTV%20connection`}
-            style={whatsappButtonStyle}
-          >
-            Contact Us on WhatsApp
-          </Button>
-        </Section>
-      </Container>
-    </Html>
+    <html lang="en">
+      <head>
+        <style>{`
+          .container { max-width: 600px; margin: 0 auto; font-family: sans-serif; }
+          .image-container { text-align: center; margin-top: 20px; }
+          .image-container img { max-width: 150px; height: auto; }
+        `}</style>
+      </head>
+      <body>
+        <div className="container">
+          <Card>
+            <CardHeader>
+              <CardTitle>IPTV Connection Information</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <h2>Order Completed</h2>
+
+              {props.connectionInfo.map((info, index) => (
+                <Card key={index} className="mt-4">
+                  <CardHeader>
+                    <CardTitle>Device {index + 1}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Username
+                          </TableCell>
+                          <TableCell>{info.username}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Password
+                          </TableCell>
+                          <TableCell>{info.password}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            Host/API/URL
+                          </TableCell>
+                          <TableCell>{info.host}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            M3U Link
+                          </TableCell>
+                          <TableCell>{info.m3uUrl}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            EPG Link
+                          </TableCell>
+                          <TableCell>{info.epgUrl}</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              ))}
+
+              <div className="mt-4">
+                <Button asChild className="mr-2">
+                  <a href="https://ronotv.com">Visit Our Website</a>
+                </Button>
+                <Button asChild variant="secondary">
+                  <a
+                    href={`https://wa.me/212777737974?text=Hello,%20I%20need%20help%20with%20my%20IPTV%20connection`}
+                  >
+                    Contact Us on WhatsApp
+                  </a>
+                </Button>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <div className="image-container">
+                <img
+                  src="https://rwxfqslhsyxt7n8g.public.blob.vercel-storage.com/logo-Q1By9guLz4bJaOxdV95ul4dWPUgCRK.png"
+                  alt="RonoTv Logo"
+                />
+              </div>
+            </CardFooter>
+          </Card>
+
+          <div className="mt-4 text-center">
+            © {new Date().getFullYear()} RonoTv. All rights reserved.
+          </div>
+        </div>
+      </body>
+    </html>
   );
 }
-
-// Styles
-const containerStyle = {
-  margin: "0 auto",
-  padding: "20px 0 48px",
-  width: "100%",
-  maxWidth: "600px",
-};
-
-const sectionStyle = {
-  backgroundColor: "#ffffff",
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-  borderRadius: "5px",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-  padding: "20px",
-};
-
-const headerStyle = {
-  fontSize: "24px",
-  fontWeight: "bold",
-  textAlign: "center" as const,
-  margin: "20px 0",
-};
-
-const subHeaderStyle = {
-  fontSize: "18px",
-  fontWeight: "bold",
-  margin: "15px 0",
-};
-
-const connectionStyle = {
-  borderBottom: "1px solid #e0e0e0",
-  paddingBottom: "15px",
-  marginBottom: "15px",
-};
-
-const labelStyle = {
-  fontWeight: "bold",
-  marginBottom: "5px",
-};
-
-const valueStyle = {
-  marginBottom: "5px",
-};
-
-const buttonStyle = {
-  backgroundColor: "#007bff",
-  borderRadius: "5px",
-  color: "#ffffff",
-  fontWeight: "bold",
-  padding: "12px 20px",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  margin: "20px auto",
-};
-
-const whatsappButtonStyle = {
-  ...buttonStyle,
-  backgroundColor: "#25D366",
-};
