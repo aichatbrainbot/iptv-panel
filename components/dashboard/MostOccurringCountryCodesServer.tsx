@@ -2,8 +2,10 @@ import MostOccurringCountryCodes from "./MostOccurringCountryCodes";
 import TotaleVisitorsOfWebsite from "./TotaleVisitorsOfWebsite";
 import redis from "@/lib/redis";
 import { getMostOccurringCountryCodes } from "@/db/drizzle-queries/aggregations/subscription-aggregations";
+import { unstable_noStore as noStore } from "next/cache";
 
 const MostOccurringCountryCodesServer = async () => {
+  noStore();
   const [data, totalVisitorsOfSite] = await Promise.all([
     getMostOccurringCountryCodes(5),
     redis.get("mycount"),

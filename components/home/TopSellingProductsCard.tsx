@@ -10,6 +10,8 @@ import {
 import { getMostSellingPlans } from "@/db/aggregations/sales-aggregation";
 import { plans as plansData } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export default async function TopSellingProductsCard() {
   const plans = await getMostSellingPlans();
   return (

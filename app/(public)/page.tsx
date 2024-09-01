@@ -5,6 +5,8 @@ import PageWrapper from "@/components/PageWrapper";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   return (
     <PageWrapper className="gap-4 pt-20">

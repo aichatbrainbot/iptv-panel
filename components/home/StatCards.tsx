@@ -2,6 +2,8 @@ import React from "react";
 import StatCard from "./StatCard";
 import { DollarSign, BarChart, Users, Package } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 import {
   getDistinctTotaleUsersCount,
   getDraftOrdersCount,

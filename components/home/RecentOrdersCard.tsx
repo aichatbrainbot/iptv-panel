@@ -9,6 +9,8 @@ import {
 import { getRecentOrders } from "@/db/data/subscriptions-data";
 import OrderRows from "./OrderRows";
 
+export const dynamic = "force-dynamic";
+
 export default async function RecentOrdersCard() {
   const orders = await getRecentOrders();
   return (
