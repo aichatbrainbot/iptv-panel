@@ -1,3 +1,4 @@
+import SideBar from "@/components/shared/SideBar";
 import { createClient } from "@/utils/supabase/server";
 import type { Metadata } from "next";
 
@@ -18,5 +19,9 @@ export default async function RootLayout({
   if (error || !data?.user) {
     redirect("/login");
   }
-  return <div>{children}</div>;
+  return (
+    <div>
+      <SideBar>{children}</SideBar>
+    </div>
+  );
 }

@@ -10,15 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getRecentOrders } from "@/db/data/subscriptions-data";
-import { OrderStatus, SearchFilter } from "@/types/search.types";
-import { Subscriptions } from "@/types/tables.types";
+import { getOrders } from "@/db/drizzle-queries/data/subscriptions-data";
+import { SearchFilter } from "@/types/search.types";
+import { Subscriptions } from "@/db/schema";
 import { createClient } from "@/utils/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useEffect } from "react";
-import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 import {
   Select,
@@ -28,12 +27,22 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Skeleton } from "../ui/skeleton";
-
+import { StatusEnum } from "@/db/schema";
 const OrdersTable = () => {
   const supabase = createClient();
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [filter] = useQueryState("filter");
-  const [tab] = useQueryState("tab");
+  const [filter] = useQueryState<SearchFilter>("filter", {
+    defaultValue: SearchFilter.ORDER_NUMBER,
+    parse(value) {
+      return value as SearchFilter;
+    },
+  });
+  const [tab] = useQueryState<StatusEnum>("tab", {
+    defaultValue: StatusEnum.PAID,
+    parse(value) {
+      return value as StatusEnum;
+    },
+  });
 
   const [search] = useQueryState("search");
   const [debouncedSearch] = useDebounce(search, 500);
@@ -52,14 +61,7 @@ const OrdersTable = () => {
       debouncedSearch,
       tab,
     ],
-    queryFn: () =>
-      getRecentOrders(
-        page,
-        itemsPerPage,
-        tab as OrderStatus,
-        filter as SearchFilter,
-        debouncedSearch,
-      ),
+    queryFn: () => getOrders(page, itemsPerPage, tab, filter, debouncedSearch),
   });
 
   useEffect(() => {

@@ -9,9 +9,3 @@ export enum SearchFilter {
   USER_EMAIL = "user_email",
   USER_PHONE = "user_phone",
 }
-
-export enum OrderStatus {
-  DRAFT = "draft",
-  PAID = "paid",
-  COMPLETED = "completed",
-}

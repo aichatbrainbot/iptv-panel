@@ -4,13 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "graphql-codegen --config codegen.ts",
     "test": "jest",
     "introspect": "drizzle-kit introspect",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "generate": "drizzle-kit generate",
+    "push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@apollo/client": "^3.11.2",
@@ -41,6 +44,7 @@
     "cmdk": "1.0.0",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.24.2",
     "drizzle-orm": "^0.33.0",
     "graphql": "^16.9.0",
     "lucide-react": "^0.435.0",
@@ -59,6 +63,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
     "recharts": "^2.12.7",
+    "server-only": "^0.0.1",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
@@ -78,7 +83,6 @@
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "drizzle-kit": "^0.24.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "jest": "^29.7.0",

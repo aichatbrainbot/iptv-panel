@@ -26,7 +26,7 @@ import { cx } from "class-variance-authority";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { insertBlog, updateBlog } from "@/db/data/blogs-data";
+import { insertBlog, updateBlog } from "@/db/drizzle-queries/data/blogs-data";
 import { useRouter } from "next/navigation";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import AutoJoiner from "tiptap-extension-auto-joiner";
@@ -79,7 +79,7 @@ const tiptapImage = TiptapImage.extend({
 });
 interface NovelEditorProps {
   initialContent?: JSONContent;
-  id?: string;
+  id?: number;
 }
 
 const extensions = [

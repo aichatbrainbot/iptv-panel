@@ -1,11 +1,13 @@
 "use client";
 import { supabase } from "@/clients/supabaseCLient";
-import { getEmailAndDevices } from "@/db/service/email-service";
-import { OrderStatus } from "@/types/search.types";
-import { Subscriptions } from "@/types/tables.types";
+import { getOrderDevices } from "@/db/drizzle-queries/data/devices-data";
+import { StatusEnum, Subscriptions } from "@/db/schema";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { CopyIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
@@ -25,7 +27,6 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { useRouter } from "next/navigation";
 
 interface Props {
   initialOrders: Subscriptions[];
@@ -72,7 +73,7 @@ export const OrderRow = ({
 
   const { data, isLoading } = useQuery({
     queryKey: ["devices", order.id],
-    queryFn: () => getEmailAndDevices(order.id),
+    queryFn: () => getOrderDevices(order.id),
     enabled: isOpen,
   });
 
@@ -95,7 +96,7 @@ export const OrderRow = ({
               : "N/A"}
           </TableCell>{" "}
           <TableCell className="text-right">
-            <Badge variant={order.status as OrderStatus}>{order.status}</Badge>
+            <Badge variant={order.status as StatusEnum}>{order.status}</Badge>
           </TableCell>{" "}
         </TableRow>
       </DialogTrigger>
@@ -161,9 +162,7 @@ export const OrderRow = ({
             </p>
             <p>
               <strong>Payement Status:</strong>{" "}
-              <Badge variant={order.status as OrderStatus}>
-                {order.status}
-              </Badge>
+              <Badge variant={order.status as StatusEnum}>{order.status}</Badge>
             </p>
             <p>
               <strong>Payement Name:</strong> {order.payement_full_name}
@@ -221,7 +220,22 @@ export const OrderRow = ({
                     <TableRow key={index}>
                       <TableCell>{device.device_type}</TableCell>
                       <TableCell className="text-right">
-                        {device.mac_address}
+                        <div className="flex items-center justify-end">
+                          {device.mac_address}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="ml-2"
+                            onClick={() => {
+                              navigator.clipboard.writeText(device.mac_address);
+                              toast.warning("Copied to clipboard", {
+                                position: "bottom-right",
+                              });
+                            }}
+                          >
+                            <CopyIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -7,7 +7,7 @@ import {
   TableCell,
   Table,
 } from "@/components/ui/table";
-import { getMostSellingPlans } from "@/db/aggregations/sales-aggregation";
+import { getMostSellingPlans } from "@/db/drizzle-queries/aggregations/subscription-aggregations";
 import { plans as plansData } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";

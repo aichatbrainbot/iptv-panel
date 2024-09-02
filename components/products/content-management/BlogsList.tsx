@@ -5,13 +5,13 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { getBlogs } from "@/db/data/blogs-data";
+import { getBlogs } from "@/db/drizzle-queries/data/blogs-data";
 import { CalendarIcon, ClockIcon, Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const BlogsList = async () => {
-  const blogs = await getBlogs(10);
+  const blogs = await getBlogs();
 
   return (
     <div className="grid aspect-video w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -31,7 +31,7 @@ const BlogsList = async () => {
               <Link href={`/products/content-management/${id}`}>
                 <Image
                   src={firstImage}
-                  alt=""
+                  alt="blog"
                   fill
                   className="h-full w-full object-cover"
                 />
@@ -59,7 +59,7 @@ const BlogsList = async () => {
             <CardFooter className="flex justify-between text-sm text-muted-foreground">
               <div className="flex items-center">
                 <CalendarIcon className="mr-1 h-4 w-4" />
-                <time dateTime={created_at}>
+                <time dateTime={created_at.toISOString()}>
                   {new Date(created_at).toLocaleDateString()}
                 </time>
               </div>

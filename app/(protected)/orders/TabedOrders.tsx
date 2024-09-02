@@ -3,28 +3,28 @@
 import { useQueryState } from "nuqs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OrdersTable from "@/components/orders/OrdersTable";
-import { OrderStatus } from "@/types/search.types";
+import { StatusEnum } from "@/db/schema";
 
 const tabs = [
-  { value: OrderStatus.DRAFT, label: "Draft" },
-  { value: OrderStatus.PAID, label: "Paid" },
-  { value: OrderStatus.COMPLETED, label: "Completed" },
+  { value: StatusEnum.DRAFT, label: "Draft" },
+  { value: StatusEnum.PAID, label: "Paid" },
+  { value: StatusEnum.COMPLETED, label: "Completed" },
 ];
 const TabedOrders = () => {
-  const [tab, setTab] = useQueryState<OrderStatus>("tab", {
-    defaultValue: OrderStatus.PAID,
+  const [tab, setTab] = useQueryState<StatusEnum>("tab", {
+    defaultValue: StatusEnum.PAID,
     parse: (value) => {
-      if (Object.values(OrderStatus).includes(value as OrderStatus)) {
-        return value as OrderStatus;
+      if (Object.values(StatusEnum).includes(value as StatusEnum)) {
+        return value as StatusEnum;
       }
-      return OrderStatus.DRAFT;
+      return StatusEnum.PAID;
     },
   });
   return (
     <Tabs
-      defaultValue={OrderStatus.PAID}
+      defaultValue={StatusEnum.PAID}
       className="w-full"
-      onValueChange={(value) => setTab(value as OrderStatus)}
+      onValueChange={(value) => setTab(value as StatusEnum)}
       value={tab}
     >
       <TabsList className="grid w-full grid-cols-3">

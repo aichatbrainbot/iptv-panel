@@ -15,7 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { PaymentsPerDay } from "@/types/tables.types";
+import { PaymentsPerDay } from "@/db/schema";
 import { format } from "date-fns";
 import {
   Select,

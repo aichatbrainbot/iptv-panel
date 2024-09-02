@@ -2,12 +2,12 @@
 
 import { ConnectionInfo } from "@/components/orders/id/OrderForm";
 import logger from "@/lib/logger";
-import { OrderStatus } from "@/types/search.types";
 import { render } from "@react-email/components";
 import nodemailer from "nodemailer";
 import { getSubDevices } from "../data/device-data";
-import { updateSubscription } from "../data/subscriptions-data";
 import { EmailTemplate } from "./EmailTemplate";
+import { updateOrder } from "../drizzle-queries/data/subscriptions-data";
+import { StatusEnum } from "../schema";
 
 const transporter = nodemailer.createTransport({
   service: "titan",
@@ -44,7 +44,7 @@ const sendCompletedEmail = async (
   logger.info("Email sent");
   console.log({ info });
 
-  await updateSubscription(orderId, { status: OrderStatus.COMPLETED });
+  await updateOrder(orderId, { status: StatusEnum.COMPLETED });
 };
 
 export { getEmailAndDevices, sendCompletedEmail };

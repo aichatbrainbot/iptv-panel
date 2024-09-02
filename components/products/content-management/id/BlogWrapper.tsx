@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { HomeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { deleteBlog } from "@/db/data/blogs-data";
 import { toast } from "sonner";
+import { deleteBlog } from "@/db/drizzle-queries/data/blogs-data";
 
 interface BlogWrapperProps {
-  id: string;
+  id: number;
   content: JSONContent;
 }
 
@@ -29,6 +29,7 @@ const BlogWrapper = ({ id, content }: BlogWrapperProps) => {
       success: "Deleted",
       error: "Error",
     });
+    push("/products/content-management");
   };
 
   return (

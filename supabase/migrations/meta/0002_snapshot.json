@@ -1,6 +1,6 @@
 {
-  "id": "3b5eb335-ea60-4b0c-a608-2777ae28dd74",
-  "prevId": "60940832-7f03-4761-b955-179c160a4c2a",
+  "id": "831dbeb7-3c81-4615-a812-c285aec4ba8f",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -47,7 +47,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "device_type": {
           "name": "device_type",
@@ -63,13 +64,27 @@
         },
         "subscription_id": {
           "name": "subscription_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "devices_subscription_id_subscriptions_id_fk": {
+          "name": "devices_subscription_id_subscriptions_id_fk",
+          "tableFrom": "devices",
+          "tableTo": "subscriptions",
+          "columnsFrom": [
+            "subscription_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -81,17 +96,12 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "additional_info": {
           "name": "additional_info",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "adult_content": {
-          "name": "adult_content",
-          "type": "boolean",
           "primaryKey": false,
           "notNull": false
         },
@@ -111,7 +121,8 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
         },
         "order_number": {
           "name": "order_number",
@@ -150,12 +161,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "quick_delivery": {
-          "name": "quick_delivery",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
         "status": {
           "name": "status",
           "type": "status_enum",
@@ -173,25 +178,40 @@
           "name": "user_email",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "user_name": {
           "name": "user_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "user_phone": {
           "name": "user_phone",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "quick_delivery": {
+          "name": "quick_delivery",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "adult_content": {
+          "name": "adult_content",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "vod": {
           "name": "vod",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},

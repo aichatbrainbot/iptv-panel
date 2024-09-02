@@ -1,6 +1,6 @@
 {
-  "id": "60940832-7f03-4761-b955-179c160a4c2a",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "d4826382-e42d-44c4-b2e0-08bdbe5db3a7",
+  "prevId": "6333ffcf-43d9-49d6-be6d-36708fc20bc2",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -18,13 +18,13 @@
           "name": "title",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "content": {
           "name": "content",
           "type": "json",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -47,7 +47,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "device_type": {
           "name": "device_type",
@@ -63,13 +64,27 @@
         },
         "subscription_id": {
           "name": "subscription_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "devices_subscription_id_subscriptions_id_fk": {
+          "name": "devices_subscription_id_subscriptions_id_fk",
+          "tableFrom": "devices",
+          "tableTo": "subscriptions",
+          "columnsFrom": [
+            "subscription_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -81,17 +96,12 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "additional_info": {
           "name": "additional_info",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "adult_content": {
-          "name": "adult_content",
-          "type": "boolean",
           "primaryKey": false,
           "notNull": false
         },
@@ -111,7 +121,8 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
         },
         "order_number": {
           "name": "order_number",
@@ -146,15 +157,9 @@
         },
         "price": {
           "name": "price",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true
-        },
-        "quick_delivery": {
-          "name": "quick_delivery",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
         },
         "status": {
           "name": "status",
@@ -173,31 +178,54 @@
           "name": "user_email",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "user_name": {
           "name": "user_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "user_phone": {
           "name": "user_phone",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "quick_delivery": {
+          "name": "quick_delivery",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "adult_content": {
+          "name": "adult_content",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "vod": {
           "name": "vod",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "subscriptions_id_unique": {
+          "name": "subscriptions_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     }
   },
   "enums": {

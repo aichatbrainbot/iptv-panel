@@ -15,10 +15,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { AddonsAnalytics as AddonsAnalyticsType } from "@/db/aggregations/sales-aggregation";
 
 type Props = {
-  addonsAnalytics: AddonsAnalyticsType;
+  addonsAnalytics: {
+    vod_count: number;
+    adult_content_count: number;
+    quick_delivery_count: number;
+  };
 };
 
 const AddonsAnalytics = ({ addonsAnalytics }: Props) => {

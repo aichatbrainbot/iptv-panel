@@ -2,7 +2,7 @@
 
 import { supabase } from "@/clients/supabaseCLient";
 import { handleStatus } from "@/lib/handleStatus";
-import { Devices } from "@/types/tables.types";
+import { Devices } from "@/db/schema";
 
 const getSubDevices = async (id: string) => {
   const { data, status, error } = await supabase

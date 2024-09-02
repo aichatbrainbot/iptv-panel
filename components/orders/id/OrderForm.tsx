@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendCompletedEmail } from "@/db/service/email-service";
-import { Subscriptions } from "@/types/tables.types";
+import { Subscriptions } from "@/db/schema";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -75,10 +75,9 @@ export default function Component({
     mutationFn: () =>
       sendCompletedEmail(
         connectionInfo,
-        // order.user_email!,
-        "ayoubbensalah2004@gmail.com",
+        order.user_email,
         order.id,
-        order.order_number!,
+        order.order_number,
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subscriptions"] });

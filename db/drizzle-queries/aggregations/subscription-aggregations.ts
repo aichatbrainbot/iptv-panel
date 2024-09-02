@@ -80,6 +80,19 @@ const getAddonsAnalytics = async () => {
   return addonsAnalytics[0];
 };
 
+const getMostSellingPlans = async () => {
+  const mostSellingPlans = await db
+    .select({
+      plan_name: sql<string>`${subscriptions.plan}`,
+      count: count(),
+    })
+    .from(subscriptions)
+    .groupBy(sql`${subscriptions.plan}`)
+    .orderBy(desc(count()));
+
+  return mostSellingPlans;
+};
+
 export {
   getDraftOrdersCount,
   getDistinctTotaleUsersCount,
@@ -88,4 +101,5 @@ export {
   getPayementsPerDay,
   getMostOccurringCountryCodes,
   getAddonsAnalytics,
+  getMostSellingPlans,
 };

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { signOut } from "@/db/data/users-data";
-import { OrderStatus } from "@/types/search.types";
+import { StatusEnum } from "@/db/schema";
 import { createClient } from "@/utils/supabase/client";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -47,7 +47,7 @@ export default function Component({ children }: { children: React.ReactNode }) {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "subscriptions" },
         (payload) => {
-          if (payload.new.status === OrderStatus.PAID) {
+          if (payload.new.status === StatusEnum.PAID) {
             toast.info(`New order: ${payload.new.order_number}`);
           }
         },

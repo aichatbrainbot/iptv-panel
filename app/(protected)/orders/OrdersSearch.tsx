@@ -21,6 +21,9 @@ const SearchBarAndFilters = ({ selectItems }: OrdersSearchProps) => {
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const [filter, setFilter] = useQueryState("filter", {
     defaultValue: selectItems[0].value,
+    parse(value) {
+      return value as SearchFilter;
+    },
   });
 
   return (
@@ -31,7 +34,10 @@ const SearchBarAndFilters = ({ selectItems }: OrdersSearchProps) => {
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search orders"
       />
-      <Select value={filter} onValueChange={setFilter}>
+      <Select
+        value={filter}
+        onValueChange={(value) => setFilter(value as SearchFilter)}
+      >
         <SelectTrigger className="w-1/3">
           <SelectValue placeholder="Search by" />
         </SelectTrigger>

@@ -18,7 +18,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { MostOccurringCountryCodes } from "@/types/tables.types";
+import { MostOccurringCountryCodes } from "@/db/schema";
 
 type Props = {
   data: MostOccurringCountryCodes[];

@@ -3,7 +3,7 @@
 import { supabase } from "@/clients/supabaseCLient";
 import { handleStatus } from "@/lib/handleStatus";
 import { SearchFilter } from "@/types/search.types";
-import { Subscriptions } from "@/types/tables.types";
+import { Subscriptions } from "@/db/schema";
 
 const getRecentOrders = async (
   page: number = 1,

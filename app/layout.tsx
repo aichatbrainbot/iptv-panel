@@ -7,7 +7,6 @@ import { Toaster } from "sonner";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import ApolloClientProvider from "@/providers/ApolloProvider";
-import SideBar from "@/components/shared/SideBar";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -40,7 +39,7 @@ export default function RootLayout({
             >
               {" "}
               <Toaster richColors position="top-center" theme="dark" />
-              <SideBar>{children}</SideBar>
+              {children}
             </ThemeProvider>
           </body>
         </html>

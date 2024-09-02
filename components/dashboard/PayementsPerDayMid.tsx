@@ -1,5 +1,5 @@
 "use client";
-import { PaymentsPerDay } from "@/types/tables.types";
+import { PaymentsPerDay } from "@/db/schema";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryState, parseAsInteger } from "nuqs";
 import PayementPerDayChart from "./PayementPerDayChart";
