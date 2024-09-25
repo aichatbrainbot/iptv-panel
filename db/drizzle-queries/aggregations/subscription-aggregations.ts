@@ -43,6 +43,7 @@ const getPayementsPerDay = async (days: number) => {
       total_payments: sql<number>`CAST(${sum(subscriptions.price)} AS FLOAT)`,
     })
     .from(subscriptions)
+    .where(inArray(subscriptions.status, ["paid", "completed"]))
     .groupBy(sql`DATE(${subscriptions.created_at})`)
     .orderBy(desc(sql`DATE(${subscriptions.created_at})`))
     .limit(days);
@@ -87,6 +88,7 @@ const getMostSellingPlans = async () => {
       count: count(),
     })
     .from(subscriptions)
+    .where(inArray(subscriptions.status, ["paid", "completed"]))
     .groupBy(sql`${subscriptions.plan}`)
     .orderBy(desc(count()));
 

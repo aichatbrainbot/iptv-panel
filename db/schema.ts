@@ -9,6 +9,7 @@ import {
   pgEnum,
   uuid,
   real,
+  foreignKey,
 } from "drizzle-orm/pg-core";
 
 import { relations, sql } from "drizzle-orm";
@@ -33,17 +34,29 @@ export const blogs = pgTable("blogs", {
   created_at: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const devices = pgTable("devices", {
-  id: uuid("id")
-    .primaryKey()
-    .default(sql`gen_random_uuid()`)
-    .notNull(),
-  device_type: text("device_type").notNull(),
-  mac_address: text("mac_address").notNull(),
-  subscription_id: uuid("subscription_id")
-    .references(() => subscriptions.id)
-    .notNull(),
-});
+export const devices = pgTable(
+  "devices",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`)
+      .notNull(),
+    device_type: text("device_type").notNull(),
+    mac_address: text("mac_address").notNull(),
+    subscription_id: uuid("subscription_id")
+      .references(() => subscriptions.id)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      devices_subscription_id_subscriptions_id_fk: foreignKey({
+        columns: [table.subscription_id],
+        foreignColumns: [subscriptions.id],
+        name: "devices_subscription_id_subscriptions_id_fk",
+      }).onDelete("cascade"),
+    };
+  },
+);
 
 export const subscriptions = pgTable("subscriptions", {
   id: uuid("id")

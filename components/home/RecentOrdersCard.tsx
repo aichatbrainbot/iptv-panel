@@ -8,11 +8,20 @@ import {
 } from "@/components/ui/table";
 import { getRecentOrders } from "@/db/data/subscriptions-data";
 import OrderRows from "./OrderRows";
-
-export const dynamic = "force-dynamic";
+import { unstable_noStore as noStore } from "next/cache";
+import { db } from "@/db";
+import { subscriptions } from "@/db/schema";
+import { desc, inArray } from "drizzle-orm";
 
 export default async function RecentOrdersCard() {
-  const orders = await getRecentOrders();
+  noStore();
+  const orders = await db
+    .select()
+    .from(subscriptions)
+    .limit(5)
+    .orderBy(desc(subscriptions.created_at))
+    .where(inArray(subscriptions.status, ["paid", "completed"]));
+
   return (
     <Card>
       <CardHeader>
