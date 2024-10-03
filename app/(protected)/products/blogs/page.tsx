@@ -21,7 +21,7 @@ const page = () => {
           </div>
         }
       >
-        <BlogsList />
+        <BlogsList type="blogs" />
       </Suspense>
       <Button>
         <Link

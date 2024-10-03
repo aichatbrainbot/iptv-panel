@@ -32,6 +32,9 @@ export const blogs = pgTable("blogs", {
   title: text("title").notNull(),
   content: json("content").$type<JSONContent>().notNull(),
   created_at: timestamp("created_at").notNull().defaultNow(),
+  seo_title: text("seo_title"),
+  seo_description: text("seo_description"),
+  seo_keywords: text("seo_keywords").array(),
 });
 
 export const devices = pgTable(
@@ -94,6 +97,16 @@ export const deviceRelations = relations(devices, ({ one }) => ({
     references: [subscriptions.id],
   }),
 }));
+
+export const articles = pgTable("articles", {
+  id: serial("id").primaryKey().notNull(),
+  title: text("title").notNull(),
+  content: json("content").$type<JSONContent>().notNull(),
+  created_at: timestamp("created_at").notNull().defaultNow(),
+  seo_title: text("seo_title"),
+  seo_description: text("seo_description"),
+  seo_keywords: text("seo_keywords").array(),
+});
 
 export type Subscriptions = typeof subscriptions.$inferSelect;
 export type Blogs = typeof blogs.$inferSelect;

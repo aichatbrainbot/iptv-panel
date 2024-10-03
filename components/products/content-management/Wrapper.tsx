@@ -30,6 +30,12 @@ import { insertBlog, updateBlog } from "@/db/drizzle-queries/data/blogs-data";
 import { useRouter } from "next/navigation";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import AutoJoiner from "tiptap-extension-auto-joiner";
+import {
+  updateArticle,
+  insertArticle,
+} from "@/db/drizzle-queries/data/articles-data";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 export const document: JSONContent = {
   type: "doc",
@@ -79,7 +85,11 @@ const tiptapImage = TiptapImage.extend({
 });
 interface NovelEditorProps {
   initialContent?: JSONContent;
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string[];
   id?: number;
+  type: "blogs" | "articles";
 }
 
 const extensions = [
@@ -102,7 +112,11 @@ const extensions = [
 
 const TailwindEditor = ({
   initialContent = document,
+  seoTitle,
+  seoDescription,
+  seoKeywords,
   id,
+  type = "blogs",
 }: NovelEditorProps) => {
   const router = useRouter();
   const [content, setContent] = useState<JSONContent>(initialContent);
@@ -118,14 +132,44 @@ const TailwindEditor = ({
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
-      if (id) {
-        await updateBlog(id, JSON.stringify(content));
+      if (type === "blogs") {
+        if (id) {
+          await updateBlog(
+            id,
+            JSON.stringify(content),
+            seoTitleState,
+            seoDescriptionState,
+            seoKeywordsState.split(",").map((keyword) => keyword.trim()),
+          );
+        } else {
+          await insertBlog(
+            JSON.stringify(content),
+            seoTitleState,
+            seoDescriptionState,
+            seoKeywordsState.split(",").map((keyword) => keyword.trim()),
+          );
+        }
       } else {
-        await insertBlog(JSON.stringify(content));
+        if (id) {
+          await updateArticle(
+            id,
+            JSON.stringify(content),
+            seoTitleState,
+            seoDescriptionState,
+            seoKeywordsState.split(",").map((keyword) => keyword.trim()),
+          );
+        } else {
+          await insertArticle(
+            JSON.stringify(content),
+            seoTitleState,
+            seoDescriptionState,
+            seoKeywordsState.split(",").map((keyword) => keyword.trim()),
+          );
+        }
       }
     },
     onSuccess: () => {
-      router.push("/products/content-management");
+      router.push(`/products/${type}`);
     },
   });
 
@@ -136,8 +180,39 @@ const TailwindEditor = ({
       error: "Error",
     });
   };
+
+  const [seoTitleState, setSeoTitleState] = useState(seoTitle);
+  const [seoDescriptionState, setSeoDescriptionState] =
+    useState(seoDescription);
+  const [seoKeywordsState, setSeoKeywordsState] = useState(
+    seoKeywords?.join(", ") || "",
+  );
+
   return (
     <div className="flex w-full flex-col gap-2">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="seoTitle">SEO Title</label>
+        <Input
+          id="seoTitle"
+          placeholder="SEO Title"
+          value={seoTitleState}
+          onChange={(e) => setSeoTitleState(e.target.value)}
+        />
+        <label htmlFor="seoDescription">SEO Description</label>
+        <Textarea
+          id="seoDescription"
+          placeholder="SEO Description"
+          value={seoDescriptionState}
+          onChange={(e) => setSeoDescriptionState(e.target.value)}
+        />
+        <label htmlFor="seoKeywords">SEO Keywords (comma separated)</label>
+        <Textarea
+          id="seoKeywords"
+          placeholder="SEO Keywords"
+          value={seoKeywordsState}
+          onChange={(e) => setSeoKeywordsState(e.target.value)}
+        />
+      </div>
       <EditorRoot>
         <EditorContent
           immediatelyRender={false}

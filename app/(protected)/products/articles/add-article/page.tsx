@@ -5,7 +5,12 @@ import React from "react";
 const page = () => {
   return (
     <PageWrapper className="items-start">
-      <TailwindEditor />
+      <TailwindEditor
+        type="articles"
+        seoTitle=""
+        seoDescription=""
+        seoKeywords={[]}
+      />
     </PageWrapper>
   );
 };

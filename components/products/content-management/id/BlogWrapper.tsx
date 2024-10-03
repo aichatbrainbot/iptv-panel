@@ -9,18 +9,20 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { deleteBlog } from "@/db/drizzle-queries/data/blogs-data";
+import { deleteArticle } from "@/db/drizzle-queries/data/articles-data";
 
 interface BlogWrapperProps {
   id: number;
   content: JSONContent;
+  type: "blogs" | "articles";
 }
 
-const BlogWrapper = ({ id, content }: BlogWrapperProps) => {
+const BlogWrapper = ({ id, content, type }: BlogWrapperProps) => {
   const extensions = [...defaultExtensions];
   const { push } = useRouter();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: deleteBlog,
+    mutationFn: type === "blogs" ? deleteBlog : deleteArticle,
   });
 
   const handleDelete = async () => {
@@ -29,7 +31,7 @@ const BlogWrapper = ({ id, content }: BlogWrapperProps) => {
       success: "Deleted",
       error: "Error",
     });
-    push("/products/content-management");
+    push(`/products/${type}`);
   };
 
   return (
@@ -55,18 +57,18 @@ const BlogWrapper = ({ id, content }: BlogWrapperProps) => {
           variant="outline"
           className="mt-4"
           onClick={() => {
-            push("/products/content-management");
+            push(`/products/${type}`);
           }}
         >
           <HomeIcon className="mr-2 h-4 w-4" />
-          Return to Blogs
+          Return to {type === "blogs" ? "Blogs" : "Articles"}
         </Button>
         <Button
           variant="destructive"
           onClick={handleDelete}
           disabled={isPending}
         >
-          Delete Article
+          Delete {type === "blogs" ? "Blog" : "Article"}
         </Button>
       </div>
     </div>

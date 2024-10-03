@@ -43,6 +43,27 @@
       "when": 1727227324503,
       "tag": "0005_dapper_kronos",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1727985655000,
+      "tag": "0006_aromatic_sunfire",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1727988482023,
+      "tag": "0007_clean_whirlwind",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1727988634583,
+      "tag": "0008_nifty_bloodscream",
+      "breakpoints": true
     }
   ]
 }

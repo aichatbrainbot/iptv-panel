@@ -5,16 +5,21 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { getArticles } from "@/db/drizzle-queries/data/articles-data";
 import { getBlogs } from "@/db/drizzle-queries/data/blogs-data";
 import { CalendarIcon, ClockIcon, Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const BlogsList = async () => {
-  const blogs = await getBlogs();
+interface BlogsListProps {
+  type: "blogs" | "articles";
+}
+
+const BlogsList = async ({ type }: BlogsListProps) => {
+  const blogs = type === "blogs" ? await getBlogs() : await getArticles();
 
   return (
-    <div className="grid aspect-video w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {blogs.map(({ id, created_at, content }, index) => {
         const firstTitle =
           content?.content?.find((item) => item.type === "heading")
@@ -28,7 +33,7 @@ const BlogsList = async () => {
         return (
           <Card className="max-w-sm overflow-hidden" key={id}>
             <div className="relative aspect-video">
-              <Link href={`/products/content-management/${id}`}>
+              <Link href={`/products/${type}/${id}`}>
                 <Image
                   src={firstImage}
                   alt="blog"
@@ -44,7 +49,9 @@ const BlogsList = async () => {
                   : firstTitle}
               </h2>
               <Button variant="ghost">
-                <Link href={`/products/content-management/edit-blog/${id}`}>
+                <Link
+                  href={`/products/${type}/edit-${type === "blogs" ? "blog" : "article"}/${id}`}
+                >
                   <Pencil className="h-4 w-4" />
                 </Link>
               </Button>

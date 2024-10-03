@@ -185,9 +185,8 @@ export default function Component({ children }: { children: React.ReactNode }) {
                   <SubNavItem href="/products/add">
                     Add and Edit Packages
                   </SubNavItem>
-                  <SubNavItem href="/products/content-management">
-                    Content Management
-                  </SubNavItem>
+                  <SubNavItem href="/products/blogs">Blogs</SubNavItem>
+                  <SubNavItem href="/products/articles">Articles</SubNavItem>
                 </div>
               )}
 
