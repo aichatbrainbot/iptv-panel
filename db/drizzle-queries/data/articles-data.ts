@@ -58,7 +58,10 @@ const updateArticle = async (
     .update(articles)
     .set({
       content: parsedContent,
-      title,
+      title: title
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .toLowerCase()
+        .replace(/^-+|-+$/g, ""),
       seo_title: seoTitle,
       seo_description: seoDescription,
       seo_keywords: seoKeywords,
