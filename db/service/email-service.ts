@@ -1,24 +1,13 @@
 "use server";
 
 import { ConnectionInfo } from "@/components/orders/id/OrderForm";
-import logger from "@/lib/logger";
-import { render } from "@react-email/components";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { getSubDevices } from "../data/device-data";
-import { EmailTemplate } from "./EmailTemplate";
 import { updateOrder } from "../drizzle-queries/data/subscriptions-data";
 import { StatusEnum } from "../schema";
+import { EmailTemplate } from "./EmailTemplate";
 
-const transporter = nodemailer.createTransport({
-  service: "titan",
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const getEmailAndDevices = async (subId: string) => {
   const devices = await getSubDevices(subId);
@@ -32,17 +21,18 @@ const sendCompletedEmail = async (
   orderId: string,
   orderNumber: number,
 ) => {
-  const emailHtml = render(EmailTemplate({ connectionInfo }));
+  // const emailHtml = render(EmailTemplate({ connectionInfo }));
 
-  const info = await transporter.sendMail({
-    from: process.env.SMTP_USER,
-    to: userEmail,
+  await resend.emails.send({
+    from: "contact@rimotv.com",
+    to:
+      process.env.NODE_ENV === "development"
+        ? "ayoubbensalah2004@gmail.com"
+        : userEmail,
     subject: `You Order ${orderNumber} is completed`,
     text: `You Order ${orderNumber} is completed`,
-    html: await emailHtml,
+    react: EmailTemplate({ connectionInfo }),
   });
-  logger.info("Email sent");
-  console.log({ info });
 
   await updateOrder(orderId, { status: StatusEnum.COMPLETED });
 };
